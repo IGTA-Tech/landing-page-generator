@@ -62,7 +62,7 @@ set OPENAI_API_KEY=your-openai-key
 4. **Run the app**
 
 ```bash
-streamlit run app.py
+streamlit run streamlit_app.py
 ```
 
 The app will open in your browser at `http://localhost:8501`
@@ -71,7 +71,7 @@ The app will open in your browser at `http://localhost:8501`
 
 ```
 landing-page-generator/
-├── app.py                    # Main Streamlit application
+├── streamlit_app.py          # Main Streamlit application
 ├── requirements.txt          # Python dependencies
 ├── .streamlit/
 │   └── config.toml          # Streamlit theme configuration
@@ -115,7 +115,7 @@ git push -u origin main
 - Go to [share.streamlit.io](https://share.streamlit.io)
 - Click "New app"
 - Connect your GitHub repository
-- Select `app.py` as the main file
+- Main file: `streamlit_app.py` (auto-detected)
 - Add your secrets in the "Advanced settings":
 
 ```toml

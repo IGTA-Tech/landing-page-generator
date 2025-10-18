@@ -25,7 +25,7 @@ cp .env.example .env
 ### Step 3: Run the App (30 seconds)
 
 ```bash
-streamlit run app.py
+streamlit run streamlit_app.py
 ```
 
 The app opens at `http://localhost:8501`

@@ -20,7 +20,7 @@ Use the same GitHub account that has the repository.
 1. Click "New app"
 2. Select repository: `IGTA-Tech/landing-page-generator`
 3. Branch: `main`
-4. Main file path: `app.py`
+4. Main file path: `streamlit_app.py` (auto-detected)
 5. Click "Advanced settings"
 
 ### Step 4: Add Secrets
@@ -51,7 +51,7 @@ Your app will be live at: `https://your-app-name.streamlit.app`
 1. Create new "Web Service"
 2. Connect GitHub repo
 3. Build command: `pip install -r requirements.txt`
-4. Start command: `streamlit run app.py --server.port $PORT --server.address 0.0.0.0`
+4. Start command: `streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0`
 5. Add environment variables
 
 ### Railway.app
