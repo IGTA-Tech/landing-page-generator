@@ -7,6 +7,7 @@ from datetime import datetime
 import os
 import zipfile
 import io
+import base64
 
 # ============================================================================
 # PAGE CONFIG
@@ -45,6 +46,10 @@ if 'generated_image' not in st.session_state:
     st.session_state.generated_image = None
 if 'deployed_url' not in st.session_state:
     st.session_state.deployed_url = None
+if 'preview_mode' not in st.session_state:
+    st.session_state.preview_mode = 'desktop'
+if 'show_html_editor' not in st.session_state:
+    st.session_state.show_html_editor = False
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -296,47 +301,179 @@ def save_to_airtable(data):
         return None
 
 # ============================================================================
-# CUSTOM CSS
+# MODERN CSS STYLING
 # ============================================================================
 st.markdown("""
 <style>
+    /* Import modern font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* Main header with gradient */
     .main-header {
-        font-size: 2.5rem;
+        font-size: 3rem;
         font-weight: 700;
-        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.6s ease-out;
     }
+
+    .sub-header {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    /* Modern step cards */
     .step-card {
-        padding: 1.5rem;
-        border-radius: 0.5rem;
-        border: 2px solid #e0e0e0;
+        padding: 2rem;
+        border-radius: 16px;
+        border: 2px solid transparent;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         margin: 1rem 0;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideInUp 0.5s ease-out;
     }
+
     .step-card:hover {
-        border-color: #0066FF;
-        box-shadow: 0 4px 12px rgba(0,102,255,0.1);
+        border-color: #667eea;
+        box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15);
+        transform: translateY(-4px);
     }
+
+    /* Brand cards with gradient hover */
     .brand-card {
         text-align: center;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border: 2px solid #e0e0e0;
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 2px solid #f0f0f0;
+        background: white;
         cursor: pointer;
-        transition: all 0.3s ease;
-        margin-bottom: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
     }
+
+    .brand-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 0;
+    }
+
+    .brand-card:hover::before {
+        opacity: 1;
+    }
+
     .brand-card:hover {
-        border-color: #0066FF;
-        transform: translateY(-4px);
-        box-shadow: 0 6px 16px rgba(0,102,255,0.15);
+        border-color: #667eea;
+        transform: translateY(-8px);
+        box-shadow: 0 16px 32px rgba(102, 126, 234, 0.2);
     }
+
+    /* Modern progress indicator */
     .progress-step {
         text-align: center;
-        font-size: 0.85rem;
-        padding: 0.5rem;
+        font-size: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 12px;
+        transition: all 0.3s;
+        font-weight: 600;
     }
+
+    /* Preview container with device frames */
+    .preview-container {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        margin: 2rem 0;
+        border: 2px solid #f0f0f0;
+    }
+
+    .mobile-frame {
+        max-width: 375px;
+        margin: 2rem auto;
+        border: 12px solid #1f1f1f;
+        border-radius: 36px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        background: #1f1f1f;
+        padding: 4px;
+    }
+
+    .desktop-frame {
+        max-width: 100%;
+        margin: 1rem auto;
+        border: 8px solid #333;
+        border-radius: 12px;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Button improvements */
     .stButton button {
         width: 100%;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .stButton button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Modern input fields */
+    .stTextInput input, .stTextArea textarea {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+    }
+
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -363,7 +500,8 @@ st.divider()
 # ============================================================================
 if st.session_state.step == 1:
     st.markdown('<div class="main-header">🚀 Landing Page Generator</div>', unsafe_allow_html=True)
-    st.markdown("### What are you looking to create today?")
+    st.markdown('<div class="sub-header">Create professional landing pages in minutes with AI</div>', unsafe_allow_html=True)
+    st.markdown("### 💭 What are you looking to create today?")
 
     with st.expander("💡 Need inspiration? See examples"):
         st.markdown("""
@@ -751,13 +889,63 @@ elif st.session_state.step == 7:
             st.caption("This image has been generated and can be downloaded or used in your landing page.")
 
     # Preview tabs
-    tab1, tab2 = st.tabs(["📱 Live Preview", "💻 HTML Code"])
+    tab1, tab2, tab3 = st.tabs(["👁️ Live Preview", "💻 HTML Code", "✏️ Edit HTML"])
 
     with tab1:
-        st.components.v1.html(st.session_state.html, height=800, scrolling=True)
+        st.subheader("Preview Your Landing Page")
+
+        # Preview mode toggle
+        col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+        with col1:
+            if st.button("📱 Mobile", use_container_width=True, type="primary" if st.session_state.preview_mode == 'mobile' else "secondary"):
+                st.session_state.preview_mode = 'mobile'
+                st.rerun()
+        with col2:
+            if st.button("💻 Desktop", use_container_width=True, type="primary" if st.session_state.preview_mode == 'desktop' else "secondary"):
+                st.session_state.preview_mode = 'desktop'
+                st.rerun()
+        with col3:
+            # Create data URI for opening in new tab
+            import base64
+            b64_html = base64.b64encode(st.session_state.html.encode()).decode()
+            href = f'data:text/html;base64,{b64_html}'
+            st.markdown(f'<a href="{href}" target="_blank"><button style="width:100%; padding:0.5rem; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">🔗 New Tab</button></a>', unsafe_allow_html=True)
+
+        st.divider()
+
+        # Render preview based on mode
+        if st.session_state.preview_mode == 'mobile':
+            st.markdown("**Mobile View (375px)**")
+            st.markdown('<div class="mobile-frame">', unsafe_allow_html=True)
+            st.components.v1.html(st.session_state.html, height=800, scrolling=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            st.markdown("**Desktop View (Full Width)**")
+            st.markdown('<div class="desktop-frame">', unsafe_allow_html=True)
+            st.components.v1.html(st.session_state.html, height=1000, scrolling=True)
+            st.markdown('</div>', unsafe_allow_html=True)
 
     with tab2:
-        st.code(st.session_state.html, language='html')
+        st.subheader("HTML Source Code")
+        col1, col2 = st.columns([3, 1])
+        with col2:
+            if st.button("📋 Copy to Clipboard"):
+                st.info("Use the download button to save the HTML file")
+        st.code(st.session_state.html, language='html', line_numbers=True)
+
+    with tab3:
+        st.subheader("Edit HTML (Advanced)")
+        st.warning("⚠️ Advanced feature: Edit the HTML code directly before deploying")
+        edited_html = st.text_area(
+            "HTML Code",
+            value=st.session_state.html,
+            height=400,
+            key="html_editor"
+        )
+        if st.button("💾 Update Preview", type="primary"):
+            st.session_state.html = edited_html
+            st.success("✅ HTML updated! Switch to Preview tab to see changes.")
+            st.rerun()
 
     # Actions
     st.divider()
