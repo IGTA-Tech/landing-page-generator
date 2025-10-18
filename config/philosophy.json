@@ -1,0 +1,98 @@
+{
+  "assessment-funnel": {
+    "name": "Assessment-Driven Funnel",
+    "hook_options": ["frustration", "readiness"],
+    "hook_templates": {
+      "frustration": "Feeling frustrated that {PROBLEM} even though {DOING_RIGHT_THING}?",
+      "readiness": "Are you ready to {DESIRED_RESULT}?"
+    },
+    "subheading": "Answer 15 questions to find out why and what to do about it",
+    "value_prop_template": "Take this assessment to measure and improve {AREA_1}, {AREA_2}, {AREA_3}",
+    "sections": [
+      "hook",
+      "subheading",
+      "value_proposition",
+      "credibility",
+      "call_to_action"
+    ],
+    "credibility_elements": [
+      "creator_background",
+      "experience_stats",
+      "research_data",
+      "social_proof"
+    ],
+    "cta_elements": {
+      "primary_text": "Start the Quiz",
+      "time_commitment": "Takes 3 minutes",
+      "price": "Completely free",
+      "immediate_value": "Immediate recommendations"
+    },
+    "assessment_structure": {
+      "total_questions": 15,
+      "required_fields": ["name", "email"],
+      "optional_fields": ["phone"],
+      "auto_fields": ["location_from_ip"],
+      "best_practice_questions": 10,
+      "qualifying_questions": [
+        "current_situation",
+        "desired_outcome_90_days",
+        "main_obstacle",
+        "preferred_solution",
+        "anything_else"
+      ]
+    },
+    "results_structure": {
+      "score_visualization": true,
+      "personalized_insights": 3,
+      "next_steps": {
+        "high_score": "Book 1-on-1 call",
+        "medium_score": "Join group event",
+        "low_score": "Download content"
+      }
+    }
+  },
+  "traditional": {
+    "name": "Traditional Funnel",
+    "description": "Standard top/middle/bottom approach with clear product offers",
+    "sections": [
+      "hero_headline",
+      "problem_statement",
+      "solution_presentation",
+      "features_benefits",
+      "social_proof",
+      "pricing",
+      "call_to_action"
+    ],
+    "conversion_rate": "2-10% typical",
+    "best_for": "Clear product offers with defined pricing"
+  },
+  "story-driven": {
+    "name": "Story-Driven",
+    "description": "Narrative emotional connection through founder or customer stories",
+    "sections": [
+      "opening_story",
+      "personal_connection",
+      "transformation_journey",
+      "how_it_works",
+      "social_proof",
+      "call_to_action"
+    ],
+    "conversion_rate": "5-15% engaged",
+    "best_for": "Personal brands and mission-driven companies"
+  },
+  "social-proof-heavy": {
+    "name": "Social Proof Heavy",
+    "description": "Testimonials, case studies, and results-focused approach",
+    "sections": [
+      "strong_claim",
+      "immediate_proof",
+      "case_studies",
+      "testimonials",
+      "results_grid",
+      "risk_reversal",
+      "call_to_action"
+    ],
+    "conversion_rate": "10-25% with strong proof",
+    "best_for": "Established brands with strong track records"
+  }
+}

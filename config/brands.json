@@ -1,0 +1,122 @@
+{
+  "sherrod-sports-visas": {
+    "name": "Sherrod Sports Visas",
+    "logo": "https://sherrodsportsvisaslogo.tiiny.site",
+    "website": "https://www.sherrodsportsvisas.com",
+    "colors": {
+      "primary": "#003366",
+      "secondary": "#0066CC",
+      "accent": "#FF6B00"
+    },
+    "ctas": {
+      "top": {
+        "text": "Download Free Visa Guide",
+        "url": "https://www.sherrodsportsvisas.com/guide"
+      },
+      "middle": {
+        "text": "Book Free Consultation",
+        "url": "https://www.sherrodsportsvisas.com/book"
+      },
+      "bottom": {
+        "text": "Start Your Application",
+        "url": "https://www.sherrodsportsvisas.com/apply"
+      }
+    }
+  },
+  "igta": {
+    "name": "Innovative Global Talent Agency",
+    "logo": "https://igtafulllogoblack.tiiny.site",
+    "website": "https://www.innovativeglobaltalent.com",
+    "colors": {
+      "primary": "#1A1A1A",
+      "secondary": "#4A4A4A",
+      "accent": "#E63946"
+    },
+    "ctas": {
+      "top": {
+        "text": "Explore Services",
+        "url": "https://www.innovativeglobaltalent.com/services"
+      },
+      "middle": {
+        "text": "Request Information",
+        "url": "https://www.innovativeglobaltalent.com/contact"
+      },
+      "bottom": {
+        "text": "Get Started Today",
+        "url": "https://www.innovativeglobaltalent.com/apply"
+      }
+    }
+  },
+  "aventus-visa-agents": {
+    "name": "Aventus Visa Agents",
+    "logo": "https://aventusvisaagentslogo.tiiny.site",
+    "website": "https://www.aventusvisaagents.com",
+    "colors": {
+      "primary": "#0052A5",
+      "secondary": "#00A3E0",
+      "accent": "#F39C12"
+    },
+    "ctas": {
+      "top": {
+        "text": "Learn About Visas",
+        "url": "https://www.aventusvisaagents.com/visa-types"
+      },
+      "middle": {
+        "text": "Schedule a Call",
+        "url": "https://www.aventusvisaagents.com/schedule"
+      },
+      "bottom": {
+        "text": "Apply Now",
+        "url": "https://www.aventusvisaagents.com/apply"
+      }
+    }
+  },
+  "camino-immigration": {
+    "name": "Camino Immigration Law",
+    "logo": "https://caminoimmmigrationlogo.tiiny.site",
+    "website": "https://www.caminoimmigration.com",
+    "colors": {
+      "primary": "#2C5F2D",
+      "secondary": "#97BC62",
+      "accent": "#FF8C42"
+    },
+    "ctas": {
+      "top": {
+        "text": "Free Resources",
+        "url": "https://www.caminoimmigration.com/resources"
+      },
+      "middle": {
+        "text": "Book Consultation",
+        "url": "https://www.caminoimmigration.com/book"
+      },
+      "bottom": {
+        "text": "Hire Us Today",
+        "url": "https://www.caminoimmigration.com/hire"
+      }
+    }
+  },
+  "innovative-automations": {
+    "name": "Innovative Automations",
+    "logo": "https://innovativeautomationsblacklogo.tiiny.site/",
+    "website": "https://www.innovativeautomations.dev",
+    "colors": {
+      "primary": "#0066FF",
+      "secondary": "#00DDFF",
+      "accent": "#FF6B6B"
+    },
+    "ctas": {
+      "top": {
+        "text": "See How It Works",
+        "url": "https://www.innovativeautomations.dev/demo"
+      },
+      "middle": {
+        "text": "View Case Studies",
+        "url": "https://www.innovativeautomations.dev/cases"
+      },
+      "bottom": {
+        "text": "Start Free Trial",
+        "url": "https://www.innovativeautomations.dev/trial"
+      }
+    }
+  }
+}
