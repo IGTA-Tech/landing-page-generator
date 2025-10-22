@@ -26,6 +26,21 @@
       {"name": "500+ Approvals", "icon": "✅"},
       {"name": "94% Success Rate", "icon": "📊"}
     ],
+    "live_chat": {
+      "enabled": true,
+      "provider": "intercom",
+      "availability_text": "Attorney available Mon-Fri 9am-5pm PST",
+      "offline_message": "Leave a message - we'll respond within 2 hours"
+    },
+    "lead_form": {
+      "type": "multi-step",
+      "steps": [
+        {"title": "Your Sport", "fields": ["sport", "competition_level"]},
+        {"title": "Your Goals", "fields": ["primary_goal", "timeline"]},
+        {"title": "Contact Info", "fields": ["name", "email", "phone"]}
+      ],
+      "submit_text": "Request Free Consultation"
+    },
     "ctas": {
       "top": {
         "text": "Download Free Visa Guide",
@@ -181,15 +196,6 @@
       {"name": "400% Avg ROI", "icon": "📈"},
       {"name": "30-Day Guarantee", "icon": "✅"}
     ],
-    "roi_calculator": {
-      "enabled": true,
-      "fields": [
-        {"name": "hours_per_week", "label": "Hours spent on manual tasks per week", "default": 15},
-        {"name": "hourly_rate", "label": "Your hourly rate ($)", "default": 50},
-        {"name": "automation_cost", "label": "One-time automation cost ($)", "default": 2500}
-      ],
-      "formula": "(hours_per_week * hourly_rate * 52 - automation_cost) / automation_cost * 100"
-    },
     "ctas": {
       "top": {
         "text": "See How It Works",

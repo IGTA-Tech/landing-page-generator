@@ -412,24 +412,87 @@ PRESS MENTIONS (As Seen In section):
 - Link to articles if URLs provided
 """
 
-        # ROI Calculator for Innovative Automations
-        roi_calculator_info = ""
-        if brand_id == 'innovative-automations' and brand.get('roi_calculator', {}).get('enabled'):
-            roi_data = json.dumps(brand['roi_calculator'], indent=2)
-            roi_calculator_info = f"""
+        # Add eligibility quiz if available
+        eligibility_quiz_info = ""
+        if brand_content.get('eligibility_quiz', {}).get('enabled'):
+            quiz_data = json.dumps(brand_content['eligibility_quiz'], indent=2)
+            eligibility_quiz_info = f"""
 
-⚠️ REQUIRED: ROI CALCULATOR (Interactive JavaScript Widget)
-{roi_data}
+⚠️ REQUIRED: INTERACTIVE ELIGIBILITY QUIZ (High-Converting Lead Generator)
+{quiz_data}
 
-- Create an interactive ROI calculator with the fields specified above
-- Use JavaScript to calculate and display results in real-time
-- Show annual savings, ROI percentage, and payback period
-- Make it visually prominent and engaging
-- Formula: (hours_per_week * hourly_rate * 52 - automation_cost) for annual savings
-- ROI %: (annual_savings / automation_cost * 100)
-- Payback period: automation_cost / (hours_per_week * hourly_rate * 4.33) months
+- Create a full-page or modal eligibility quiz with JavaScript
+- Multi-step progress indicator (Question X of Y)
+- Each question on its own screen/step
+- Previous/Next navigation buttons
+- Email capture before showing results
+- Calculate score based on answers (stronger answers = higher scores)
+- Show personalized results based on score thresholds
+- Include CTA to book consultation in results
+- Mobile-friendly design with smooth transitions
+- This typically converts at 20-40% - make it prominent!
 
-Example output: "You'll save $37,500 per year - that's a 1,400% ROI! Payback in just 1.7 months."
+Scoring guide:
+- International competition: 5 points
+- Extensive media: 4 points
+- Major awards: 5 points
+- Professional goals: 3 points
+"""
+
+        # Add video testimonials if available
+        video_testimonials_info = ""
+        if brand_content.get('video_testimonials') and len(brand_content['video_testimonials']) > 0:
+            video_json = json.dumps(brand_content['video_testimonials'], indent=2)
+            video_testimonials_info = f"""
+
+VIDEO TESTIMONIALS (3x More Trust Than Text):
+{video_json}
+
+- Embed YouTube/Vimeo videos using provided URLs
+- Display video thumbnail with play button overlay
+- Show author name and title below video
+- Include short quote preview as caption
+- Make videos responsive (16:9 aspect ratio)
+- Add "Watch [Client Name]'s Story" headline
+- Video testimonials are MUCH more powerful than text - feature them prominently
+"""
+
+        # Add live chat widget
+        live_chat_info = ""
+        if brand.get('live_chat', {}).get('enabled'):
+            chat_data = json.dumps(brand['live_chat'], indent=2)
+            live_chat_info = f"""
+
+LIVE CHAT WIDGET (Increases Conversions by 38%):
+{chat_data}
+
+- Add a chat widget button fixed to bottom-right corner
+- Show availability status: "{brand['live_chat'].get('availability_text', 'Chat with us')}"
+- Use brand colors for chat button
+- Bubble icon with notification dot
+- On click: open chat interface (simulate - can say "Chat opens in Intercom")
+- Display offline message when outside business hours
+- Make it unobtrusive but always visible
+"""
+
+        # Add multi-step form
+        multi_step_form_info = ""
+        if brand.get('lead_form', {}).get('type') == 'multi-step':
+            form_data = json.dumps(brand['lead_form'], indent=2)
+            multi_step_form_info = f"""
+
+MULTI-STEP LEAD FORM (Higher Completion Rates):
+{form_data}
+
+- Create a multi-step form with progress indicator
+- Show one step at a time with smooth transitions
+- Progress bar showing "Step X of Y"
+- Back/Next buttons for navigation
+- Validate each step before proceeding
+- Final step includes submit button
+- Use brand colors for progress indicators
+- Make it mobile-responsive
+- Multi-step forms have 30-50% higher completion rates than single-page forms
 """
 
         # Use custom colors if available, otherwise use brand defaults
@@ -443,7 +506,10 @@ Example output: "You'll save $37,500 per year - that's a 1,400% ROI! Payback in 
 {trust_badges_info}
 {faq_info}
 {press_mentions_info}
-{roi_calculator_info}
+{eligibility_quiz_info}
+{video_testimonials_info}
+{live_chat_info}
+{multi_step_form_info}
 
 BRAND INFORMATION:
 - Brand Name: {brand['name']}

@@ -15,6 +15,17 @@
         "verified": true
       }
     ],
+    "video_testimonials": [
+      {
+        "video_url": "https://www.youtube.com/embed/VIDEO_ID",
+        "thumbnail": "https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg",
+        "author": "Client Name",
+        "title": "Professional MMA Fighter",
+        "quote_preview": "Sherrod helped me get my O-1 visa approved in just 75 days...",
+        "duration": "2:15",
+        "verified": true
+      }
+    ],
     "case_studies": [],
     "team_members": [],
     "services": [
@@ -54,6 +65,58 @@
         "answer": "While no attorney can guarantee USCIS approval, we offer a full refund if we determine we cannot build a strong case for you during the initial evidence gathering phase."
       }
     ],
+    "eligibility_quiz": {
+      "enabled": true,
+      "title": "Check Your O-1 Visa Eligibility",
+      "subtitle": "Take this free 2-minute assessment to see if you qualify",
+      "questions": [
+        {
+          "id": 1,
+          "question": "What sport do you compete in professionally?",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": 2,
+          "question": "Have you competed at the international level?",
+          "type": "radio",
+          "options": ["Yes, extensively", "Yes, a few times", "No, only domestically"],
+          "required": true
+        },
+        {
+          "id": 3,
+          "question": "Do you have media coverage of your achievements?",
+          "type": "radio",
+          "options": ["Yes, multiple articles", "Some coverage", "Little to no coverage"],
+          "required": true
+        },
+        {
+          "id": 4,
+          "question": "Have you won any major competitions or awards?",
+          "type": "radio",
+          "options": ["Yes, national/international level", "Regional level", "Local level only", "No major awards"],
+          "required": true
+        },
+        {
+          "id": 5,
+          "question": "What's your primary goal in the US?",
+          "type": "checkbox",
+          "options": ["Train with top coaches", "Compete professionally", "Build my career", "Other"],
+          "required": true
+        }
+      ],
+      "result_thresholds": {
+        "strong": {"min_score": 12, "title": "Strong Candidate", "message": "Based on your answers, you're an excellent candidate for O-1 visa approval. Book a free consultation to start your application."},
+        "moderate": {"min_score": 8, "title": "Moderate Candidate", "message": "You have potential for O-1 approval, but we'll need to build a strong evidence package. Let's discuss your case in detail."},
+        "weak": {"min_score": 0, "title": "Needs Work", "message": "Your profile needs strengthening before applying. We can discuss alternative visa options or strategies to build your credentials."}
+      },
+      "lead_capture": {
+        "email_required": true,
+        "phone_optional": true,
+        "cta_text": "Get My Results",
+        "thank_you_message": "Thank you! Check your email for your personalized assessment results."
+      }
+    },
     "about_text": "Sherrod Sports Visas, founded by Sherrod Seward, specializes in helping athletes and sports professionals navigate the complex U.S. visa process.",
     "allow_ai_testimonials": false
   },
