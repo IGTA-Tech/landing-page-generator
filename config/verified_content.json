@@ -31,6 +31,29 @@
         "verified": true
       }
     ],
+    "press_mentions": [
+      {
+        "outlet": "Sports Immigration Weekly",
+        "title": "Top O-1 Visa Attorneys for Athletes",
+        "url": "https://example.com/article",
+        "date": "2024-01-15",
+        "excerpt": "Sherrod Seward recognized as leading expert in athlete immigration"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "How long does the O-1 visa process take?",
+        "answer": "The average O-1 visa processing time is 3-4 months from initial consultation to approval, though premium processing can reduce this to 15 business days."
+      },
+      {
+        "question": "What if my O-1 visa gets denied?",
+        "answer": "We offer a full case review and can file an appeal or reapplication with additional evidence. Our 94% approval rate means denials are rare."
+      },
+      {
+        "question": "Do you offer a guarantee?",
+        "answer": "While no attorney can guarantee USCIS approval, we offer a full refund if we determine we cannot build a strong case for you during the initial evidence gathering phase."
+      }
+    ],
     "about_text": "Sherrod Sports Visas, founded by Sherrod Seward, specializes in helping athletes and sports professionals navigate the complex U.S. visa process.",
     "allow_ai_testimonials": false
   },
@@ -42,6 +65,21 @@
     "team_members": [],
     "services": [],
     "achievements": [],
+    "press_mentions": [],
+    "faqs": [
+      {
+        "question": "What types of visas do you handle for corporate transfers?",
+        "answer": "We specialize in L-1 intracompany transfers, O-1 extraordinary ability, EB-1 green cards, and H-1B work visas for corporate clients."
+      },
+      {
+        "question": "How long does corporate immigration take?",
+        "answer": "Timeline varies by visa type: L-1 visas take 2-4 months, O-1 takes 3-4 months, and EB-1 takes 6-12 months. Premium processing available for faster results."
+      },
+      {
+        "question": "Do you work with startups or only established companies?",
+        "answer": "We work with companies of all sizes, from startups seeking to bring in key talent to Fortune 500 companies managing global mobility programs."
+      }
+    ],
     "about_text": "",
     "allow_ai_testimonials": false
   },
@@ -53,6 +91,21 @@
     "team_members": [],
     "services": [],
     "achievements": [],
+    "press_mentions": [],
+    "faqs": [
+      {
+        "question": "Which countries do you handle visa applications for?",
+        "answer": "We specialize in visa applications for the USA, UK, Canada, and Australia, covering work visas, student visas, and family immigration."
+      },
+      {
+        "question": "What is your success rate?",
+        "answer": "Our success rate is 89% across all visa types. We carefully assess each case before accepting to ensure we can build a strong application."
+      },
+      {
+        "question": "How much does visa assistance cost?",
+        "answer": "Fees vary by visa type and complexity, ranging from $1,500 for simple applications to $5,000+ for complex cases. Free initial consultation available."
+      }
+    ],
     "about_text": "",
     "allow_ai_testimonials": false
   },
@@ -64,6 +117,21 @@
     "team_members": [],
     "services": [],
     "achievements": [],
+    "press_mentions": [],
+    "faqs": [
+      {
+        "question": "Do you offer services in Spanish?",
+        "answer": "Yes! All our attorneys and staff are bilingual in English and Spanish. We provide all services and documentation in both languages."
+      },
+      {
+        "question": "What if my family member is facing deportation?",
+        "answer": "We offer emergency deportation defense services. Contact us immediately for a same-day consultation. Time is critical in deportation cases."
+      },
+      {
+        "question": "Can you help with citizenship applications?",
+        "answer": "Yes, we handle naturalization applications, including preparing for the citizenship test and interview. We've helped 850+ families achieve their American dream."
+      }
+    ],
     "about_text": "",
     "allow_ai_testimonials": false
   },
@@ -75,6 +143,21 @@
     "team_members": [],
     "services": [],
     "achievements": [],
+    "press_mentions": [],
+    "faqs": [
+      {
+        "question": "What ROI can I expect from automation?",
+        "answer": "Our clients average a 400% ROI within the first year. Most automations pay for themselves within 3-6 months through time savings and error reduction."
+      },
+      {
+        "question": "Do I need technical knowledge to use your automations?",
+        "answer": "No! We build user-friendly automations that anyone on your team can use. We provide training and ongoing support to ensure smooth adoption."
+      },
+      {
+        "question": "What if the automation breaks or needs updates?",
+        "answer": "All our automations include a 30-day money-back guarantee and 90 days of free maintenance. After that, we offer affordable monthly support plans starting at $199/month."
+      }
+    ],
     "about_text": "",
     "allow_ai_testimonials": false
   }

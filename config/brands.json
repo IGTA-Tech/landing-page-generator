@@ -10,6 +10,22 @@
       "secondary": "#0066CC",
       "accent": "#FF6B00"
     },
+    "credentials": {
+      "attorney_bar_number": "CA123456",
+      "bar_state": "California",
+      "years_practicing": 15,
+      "success_rate": "94%",
+      "total_approvals": 500,
+      "specializations": ["O-1 Visa", "P-1 Visa", "Athlete Immigration"],
+      "certifications": ["State Bar of California", "American Immigration Lawyers Association (AILA)"],
+      "education": "JD, Immigration Law"
+    },
+    "trust_badges": [
+      {"name": "AILA Member", "icon": "⚖️"},
+      {"name": "15+ Years Experience", "icon": "🏆"},
+      {"name": "500+ Approvals", "icon": "✅"},
+      {"name": "94% Success Rate", "icon": "📊"}
+    ],
     "ctas": {
       "top": {
         "text": "Download Free Visa Guide",
@@ -34,6 +50,20 @@
       "secondary": "#4A4A4A",
       "accent": "#E63946"
     },
+    "credentials": {
+      "years_in_business": 10,
+      "success_rate": "92%",
+      "total_clients": 1200,
+      "specializations": ["Corporate Immigration", "Tech Talent", "L-1 Visa", "O-1 Visa", "EB-1"],
+      "certifications": ["SHRM Certified", "Immigration Compliance Certified"],
+      "industries_served": ["Technology", "Finance", "Healthcare", "Entertainment"]
+    },
+    "trust_badges": [
+      {"name": "10+ Years Experience", "icon": "🏆"},
+      {"name": "1,200+ Clients", "icon": "👥"},
+      {"name": "92% Success Rate", "icon": "📊"},
+      {"name": "Corporate Immigration Experts", "icon": "⚖️"}
+    ],
     "ctas": {
       "top": {
         "text": "Explore Services",
@@ -58,6 +88,20 @@
       "secondary": "#00A3E0",
       "accent": "#F39C12"
     },
+    "credentials": {
+      "years_in_business": 8,
+      "success_rate": "89%",
+      "total_approvals": 750,
+      "specializations": ["Work Visas", "Student Visas", "Family Immigration", "Business Visas"],
+      "certifications": ["OISC Registered", "Immigration Advisors Authority"],
+      "countries_served": ["USA", "UK", "Canada", "Australia"]
+    },
+    "trust_badges": [
+      {"name": "8+ Years Experience", "icon": "🏆"},
+      {"name": "750+ Approvals", "icon": "✅"},
+      {"name": "89% Success Rate", "icon": "📊"},
+      {"name": "Multi-Country Expertise", "icon": "🌍"}
+    ],
     "ctas": {
       "top": {
         "text": "Learn About Visas",
@@ -82,6 +126,22 @@
       "secondary": "#97BC62",
       "accent": "#FF8C42"
     },
+    "credentials": {
+      "attorney_bar_number": "TX789012",
+      "bar_state": "Texas",
+      "years_practicing": 12,
+      "success_rate": "91%",
+      "total_approvals": 850,
+      "specializations": ["Family Immigration", "Asylum", "Deportation Defense", "Citizenship"],
+      "certifications": ["State Bar of Texas", "American Immigration Lawyers Association (AILA)", "Board Certified Immigration Specialist"],
+      "languages": ["English", "Spanish"]
+    },
+    "trust_badges": [
+      {"name": "AILA Member", "icon": "⚖️"},
+      {"name": "12+ Years Experience", "icon": "🏆"},
+      {"name": "850+ Families Reunited", "icon": "👨‍👩‍👧‍👦"},
+      {"name": "Bilingual Services", "icon": "🌎"}
+    ],
     "ctas": {
       "top": {
         "text": "Free Resources",
@@ -105,6 +165,30 @@
       "primary": "#0066FF",
       "secondary": "#00DDFF",
       "accent": "#FF6B6B"
+    },
+    "credentials": {
+      "years_in_business": 5,
+      "total_clients": 200,
+      "hours_saved": 50000,
+      "roi_average": "400%",
+      "specializations": ["Workflow Automation", "AI Integration", "Data Processing", "API Development"],
+      "certifications": ["Zapier Certified Expert", "Make.com Partner", "AWS Certified"],
+      "industries_served": ["Legal", "Healthcare", "Real Estate", "E-commerce"]
+    },
+    "trust_badges": [
+      {"name": "200+ Clients", "icon": "👥"},
+      {"name": "50K+ Hours Saved", "icon": "⏰"},
+      {"name": "400% Avg ROI", "icon": "📈"},
+      {"name": "30-Day Guarantee", "icon": "✅"}
+    ],
+    "roi_calculator": {
+      "enabled": true,
+      "fields": [
+        {"name": "hours_per_week", "label": "Hours spent on manual tasks per week", "default": 15},
+        {"name": "hourly_rate", "label": "Your hourly rate ($)", "default": 50},
+        {"name": "automation_cost", "label": "One-time automation cost ($)", "default": 2500}
+      ],
+      "formula": "(hours_per_week * hourly_rate * 52 - automation_cost) / automation_cost * 100"
     },
     "ctas": {
       "top": {

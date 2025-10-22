@@ -356,6 +356,82 @@ VERIFIED SERVICES (Reference these):
         if 'tagline' in brand:
             founder_info += f"\n- Tagline: {brand['tagline']} (use this in appropriate places like footer or about section)"
 
+        # Add credentials if available
+        credentials_info = ""
+        if 'credentials' in brand:
+            credentials_json = json.dumps(brand['credentials'], indent=2)
+            credentials_info = f"""
+
+CREDENTIALS & QUALIFICATIONS (Display prominently for trust):
+{credentials_json}
+
+- Include success rate, years of experience, total clients/approvals prominently
+- For attorneys: Display bar number, certifications, specializations
+- Build credibility through specific numbers and verifiable credentials
+"""
+
+        # Add trust badges
+        trust_badges_info = ""
+        if 'trust_badges' in brand:
+            trust_badges_json = json.dumps(brand['trust_badges'], indent=2)
+            trust_badges_info = f"""
+
+TRUST BADGES (Display near hero section):
+{trust_badges_json}
+
+- Create a visually appealing trust badge section near the top of the page
+- Use icons and clear text
+- Make badges stand out with brand colors
+"""
+
+        # Add FAQs from verified content
+        faq_info = ""
+        if brand_content.get('faqs'):
+            faqs_json = json.dumps(brand_content['faqs'], indent=2)
+            faq_info = f"""
+
+FAQ SECTION (REQUIRED - Address objections):
+{faqs_json}
+
+- Create an FAQ section before the final CTA
+- Use accordion/collapsible design for clean presentation
+- These FAQs address real customer objections - include all of them
+"""
+
+        # Add press mentions if available
+        press_mentions_info = ""
+        if brand_content.get('press_mentions') and len(brand_content['press_mentions']) > 0:
+            press_json = json.dumps(brand_content['press_mentions'], indent=2)
+            press_mentions_info = f"""
+
+PRESS MENTIONS (As Seen In section):
+{press_json}
+
+- Create an "As Seen In" or "Featured In" section
+- Display outlet names prominently
+- Link to articles if URLs provided
+"""
+
+        # ROI Calculator for Innovative Automations
+        roi_calculator_info = ""
+        if brand_id == 'innovative-automations' and brand.get('roi_calculator', {}).get('enabled'):
+            roi_data = json.dumps(brand['roi_calculator'], indent=2)
+            roi_calculator_info = f"""
+
+⚠️ REQUIRED: ROI CALCULATOR (Interactive JavaScript Widget)
+{roi_data}
+
+- Create an interactive ROI calculator with the fields specified above
+- Use JavaScript to calculate and display results in real-time
+- Show annual savings, ROI percentage, and payback period
+- Make it visually prominent and engaging
+- Formula: (hours_per_week * hourly_rate * 52 - automation_cost) for annual savings
+- ROI %: (annual_savings / automation_cost * 100)
+- Payback period: automation_cost / (hours_per_week * hourly_rate * 4.33) months
+
+Example output: "You'll save $37,500 per year - that's a 1,400% ROI! Payback in just 1.7 months."
+"""
+
         # Use custom colors if available, otherwise use brand defaults
         colors = st.session_state.custom_colors if st.session_state.custom_colors else brand['colors']
 
@@ -363,6 +439,11 @@ VERIFIED SERVICES (Reference these):
 {copy_guidance}
 {hero_image_instruction}
 {verified_content_instruction}
+{credentials_info}
+{trust_badges_info}
+{faq_info}
+{press_mentions_info}
+{roi_calculator_info}
 
 BRAND INFORMATION:
 - Brand Name: {brand['name']}
