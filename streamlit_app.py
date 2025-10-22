@@ -75,12 +75,21 @@ def load_philosophy():
         st.error("philosophy.json not found. Please ensure config/philosophy.json exists.")
         return {}
 
+def get_secret(key):
+    """Get secret from Streamlit secrets or environment variable"""
+    try:
+        # Try Streamlit secrets first (for Streamlit Cloud)
+        return st.secrets[key]
+    except (KeyError, FileNotFoundError):
+        # Fall back to environment variable (for local development)
+        return os.getenv(key)
+
 def parse_intent(user_input):
     """Parse user intent using Claude API"""
     try:
-        api_key = os.getenv('ANTHROPIC_API_KEY')
+        api_key = get_secret('ANTHROPIC_API_KEY')
         if not api_key:
-            st.error("ANTHROPIC_API_KEY environment variable not set")
+            st.error("ANTHROPIC_API_KEY not set in secrets or environment")
             return "Unable to parse intent - API key missing"
 
         client = Anthropic(api_key=api_key)
@@ -110,9 +119,9 @@ Keep it concise and actionable."""
 def generate_landing_page(brand, philosophy, style, cta, intent):
     """Generate landing page HTML using Claude API"""
     try:
-        api_key = os.getenv('ANTHROPIC_API_KEY')
+        api_key = get_secret('ANTHROPIC_API_KEY')
         if not api_key:
-            st.error("ANTHROPIC_API_KEY environment variable not set")
+            st.error("ANTHROPIC_API_KEY not set in secrets or environment")
             return "<html><body><h1>Error: API key missing</h1></body></html>"
 
         client = Anthropic(api_key=api_key)
@@ -186,9 +195,9 @@ Return ONLY the complete HTML code, no explanations or markdown formatting."""
 def generate_image(brand, intent, style):
     """Generate hero image using DALL-E"""
     try:
-        api_key = os.getenv('OPENAI_API_KEY')
+        api_key = get_secret('OPENAI_API_KEY')
         if not api_key:
-            st.error("OPENAI_API_KEY environment variable not set")
+            st.error("OPENAI_API_KEY not set in secrets or environment")
             return None
 
         client = openai.OpenAI(api_key=api_key)
@@ -215,9 +224,9 @@ Corporate, trustworthy aesthetic."""
 def deploy_to_netlify(html, subdomain):
     """Deploy HTML to Netlify"""
     try:
-        netlify_token = os.getenv('NETLIFY_TOKEN')
+        netlify_token = get_secret('NETLIFY_TOKEN')
         if not netlify_token:
-            st.error("NETLIFY_TOKEN environment variable not set")
+            st.error("NETLIFY_TOKEN not set in secrets or environment")
             return None
 
         # Create ZIP file in memory
@@ -264,8 +273,8 @@ def deploy_to_netlify(html, subdomain):
 def save_to_airtable(data):
     """Save landing page data to Airtable"""
     try:
-        airtable_key = os.getenv('AIRTABLE_API_KEY')
-        base_id = os.getenv('AIRTABLE_BASE_ID')
+        airtable_key = get_secret('AIRTABLE_API_KEY')
+        base_id = get_secret('AIRTABLE_BASE_ID')
 
         if not airtable_key or not base_id:
             st.error("AIRTABLE_API_KEY or AIRTABLE_BASE_ID environment variable not set")
