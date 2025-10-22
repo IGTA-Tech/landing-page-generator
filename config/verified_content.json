@@ -1,0 +1,81 @@
+{
+  "sherrod-sports-visas": {
+    "crawl_date": "2025-10-22",
+    "base_url": "https://www.sherrodsportsvisas.com",
+    "founder": {
+      "name": "Sherrod Seward",
+      "title": "Founder & Immigration Attorney",
+      "bio": "Sherrod Seward is the founder of Sherrod Sports Visas, specializing in athlete visas and immigration law."
+    },
+    "testimonials": [
+      {
+        "quote": "Add real testimonials here after crawling the website",
+        "author": "Client Name",
+        "source_url": "https://www.sherrodsportsvisas.com",
+        "verified": true
+      }
+    ],
+    "case_studies": [],
+    "team_members": [],
+    "services": [
+      {
+        "title": "O-1 Visa Services",
+        "description": "Expert assistance with O-1 visa applications for athletes",
+        "source_url": "https://www.sherrodsportsvisas.com"
+      }
+    ],
+    "achievements": [
+      {
+        "description": "Add verified achievements like '500+ successful visa applications'",
+        "source_url": "https://www.sherrodsportsvisas.com",
+        "verified": true
+      }
+    ],
+    "about_text": "Sherrod Sports Visas, founded by Sherrod Seward, specializes in helping athletes and sports professionals navigate the complex U.S. visa process.",
+    "allow_ai_testimonials": false
+  },
+  "igta": {
+    "crawl_date": "2025-10-22",
+    "base_url": "https://www.innovativeglobaltalent.com",
+    "testimonials": [],
+    "case_studies": [],
+    "team_members": [],
+    "services": [],
+    "achievements": [],
+    "about_text": "",
+    "allow_ai_testimonials": false
+  },
+  "aventus-visa-agents": {
+    "crawl_date": "2025-10-22",
+    "base_url": "https://www.aventusvisaagents.com",
+    "testimonials": [],
+    "case_studies": [],
+    "team_members": [],
+    "services": [],
+    "achievements": [],
+    "about_text": "",
+    "allow_ai_testimonials": false
+  },
+  "camino-immigration": {
+    "crawl_date": "2025-10-22",
+    "base_url": "https://www.caminoimmigration.com",
+    "testimonials": [],
+    "case_studies": [],
+    "team_members": [],
+    "services": [],
+    "achievements": [],
+    "about_text": "",
+    "allow_ai_testimonials": false
+  },
+  "innovative-automations": {
+    "crawl_date": "2025-10-22",
+    "base_url": "https://www.innovativeautomations.dev",
+    "testimonials": [],
+    "case_studies": [],
+    "team_members": [],
+    "services": [],
+    "achievements": [],
+    "about_text": "",
+    "allow_ai_testimonials": false
+  }
+}

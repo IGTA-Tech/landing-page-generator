@@ -54,6 +54,10 @@ if 'copy_preview' not in st.session_state:
     st.session_state.copy_preview = None
 if 'copy_approved' not in st.session_state:
     st.session_state.copy_approved = False
+if 'custom_colors' not in st.session_state:
+    st.session_state.custom_colors = None
+if 'style_selected' not in st.session_state:
+    st.session_state.style_selected = False
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -77,6 +81,16 @@ def load_philosophy():
             return json.load(f)
     except FileNotFoundError:
         st.error("philosophy.json not found. Please ensure config/philosophy.json exists.")
+        return {}
+
+@st.cache_data
+def load_verified_content():
+    """Load verified content from crawled websites"""
+    try:
+        with open('config/verified_content.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        st.warning("verified_content.json not found. Testimonials will be disabled.")
         return {}
 
 def get_secret(key):
@@ -177,7 +191,7 @@ Format as clear, structured text that I can review and approve before HTML gener
         st.error(f"Error generating copy preview: {str(e)}")
         return None
 
-def generate_landing_page(brand, philosophy, style, cta, intent, copy_preview=None, feedback=None):
+def generate_landing_page(brand, philosophy, style, cta, intent, copy_preview=None, feedback=None, hero_image_url=None, brand_id=None):
     """Generate landing page HTML using Claude API"""
     try:
         api_key = get_secret('ANTHROPIC_API_KEY')
@@ -190,6 +204,10 @@ def generate_landing_page(brand, philosophy, style, cta, intent, copy_preview=No
         # Load philosophy details
         phil_data = load_philosophy()
         phil_info = phil_data.get(philosophy, {})
+
+        # Load verified content for this brand
+        verified_content = load_verified_content()
+        brand_content = verified_content.get(brand_id, {}) if brand_id else {}
 
         # Build copy guidance section
         copy_guidance = ""
@@ -209,16 +227,93 @@ USER FEEDBACK/ADJUSTMENTS:
 Please incorporate this feedback into the final HTML.
 """
 
+        # Add hero image if generated
+        hero_image_instruction = ""
+        if hero_image_url:
+            hero_image_instruction = f"""
+HERO IMAGE (REQUIRED):
+- Use this AI-generated image as the main hero image: {hero_image_url}
+- Place it prominently in the hero section
+- Use proper <img> tag with alt text describing the image
+- Make it responsive and visually impactful
+"""
+
+        # Add verified content instructions
+        verified_content_instruction = """
+⚠️ CRITICAL TESTIMONIAL POLICY:
+"""
+
+        # Check if testimonials are available
+        has_testimonials = brand_content.get('testimonials') and len(brand_content.get('testimonials', [])) > 0
+        allow_ai_testimonials = brand_content.get('allow_ai_testimonials', False)
+
+        if has_testimonials:
+            testimonials_json = json.dumps(brand_content['testimonials'], indent=2)
+            verified_content_instruction += f"""
+VERIFIED TESTIMONIALS (Use ONLY these):
+{testimonials_json}
+
+- You MUST use ONLY these verified testimonials
+- DO NOT modify or paraphrase these testimonials
+- Include attribution exactly as provided
+- You may use fewer testimonials, but NEVER create fake ones
+"""
+        else:
+            verified_content_instruction += """
+NO VERIFIED TESTIMONIALS AVAILABLE.
+
+⛔ DO NOT CREATE, FABRICATE, OR MAKE UP ANY TESTIMONIALS
+⛔ DO NOT include a testimonials section if no verified testimonials exist
+⛔ DO NOT use placeholder testimonials
+⛔ DO NOT paraphrase or invent customer quotes
+
+If you want social proof, use:
+- Trust badges
+- Certifications
+- Years of experience
+- General statistics (if verified achievements are provided)
+"""
+
+        # Add verified achievements if available
+        if brand_content.get('achievements'):
+            achievements_json = json.dumps(brand_content['achievements'], indent=2)
+            verified_content_instruction += f"""
+
+VERIFIED ACHIEVEMENTS (Use these for social proof):
+{achievements_json}
+"""
+
+        # Add verified services if available
+        if brand_content.get('services'):
+            services_json = json.dumps(brand_content['services'][:5], indent=2)  # Limit to 5
+            verified_content_instruction += f"""
+
+VERIFIED SERVICES (Reference these):
+{services_json}
+"""
+
+        # Add founder info if available
+        founder_info = ""
+        if 'founder' in brand:
+            founder_info = f"\n- Founder: {brand['founder']}"
+        if 'tagline' in brand:
+            founder_info += f"\n- Tagline: {brand['tagline']} (use this in appropriate places like footer or about section)"
+
+        # Use custom colors if available, otherwise use brand defaults
+        colors = st.session_state.custom_colors if st.session_state.custom_colors else brand['colors']
+
         prompt = f"""Create a complete, production-ready HTML landing page with inline CSS and JavaScript.
 {copy_guidance}
+{hero_image_instruction}
+{verified_content_instruction}
 
 BRAND INFORMATION:
 - Brand Name: {brand['name']}
 - Logo URL: {brand['logo']}
-- Primary Color: {brand['colors']['primary']}
-- Secondary Color: {brand['colors']['secondary']}
-- Accent Color: {brand['colors']['accent']}
-- Website: {brand['website']}
+- Primary Color: {colors['primary']}
+- Secondary Color: {colors['secondary']}
+- Accent Color: {colors['accent']}
+- Website: {brand['website']}{founder_info}
 
 PHILOSOPHY: {philosophy}
 {json.dumps(phil_info, indent=2)}
@@ -792,23 +887,88 @@ elif st.session_state.step == 4:
         }
     }
 
-    cols = st.columns(2)
-    for idx, (style_id, style) in enumerate(styles.items()):
-        with cols[idx % 2]:
-            st.markdown('<div class="step-card">', unsafe_allow_html=True)
-            st.subheader(f"{style['emoji']} {style['name']}")
-            st.markdown(f"**{style['desc']}**")
-            st.caption(style['characteristics'])
-            if st.button(f"Select", key=style_id, use_container_width=True, type="primary"):
-                st.session_state.style = style_id
-                st.session_state.step = 5
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
+    # Show style selection if not yet selected
+    if not st.session_state.style_selected:
+        cols = st.columns(2)
+        for idx, (style_id, style) in enumerate(styles.items()):
+            with cols[idx % 2]:
+                st.markdown('<div class="step-card">', unsafe_allow_html=True)
+                st.subheader(f"{style['emoji']} {style['name']}")
+                st.markdown(f"**{style['desc']}**")
+                st.caption(style['characteristics'])
+                if st.button(f"Select", key=style_id, use_container_width=True, type="primary"):
+                    st.session_state.style = style_id
+                    st.session_state.style_selected = True
+                    st.rerun()
+                st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        # Show selected style and color customization
+        selected_style = styles[st.session_state.style]
+        st.success(f"✅ Selected Style: {selected_style['emoji']} {selected_style['name']}")
+
+        st.divider()
+        st.subheader("🎨 Customize Brand Colors (Optional)")
+        st.info("💡 Adjust the colors to match your exact brand. Leave as-is to use the default brand colors.")
+
+        brand = st.session_state.brand_data
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            primary_color = st.color_picker(
+                "Primary Color",
+                value=st.session_state.custom_colors['primary'] if st.session_state.custom_colors else brand['colors']['primary'],
+                help="Used for main buttons and headers",
+                key="primary_color_picker"
+            )
+
+        with col2:
+            secondary_color = st.color_picker(
+                "Secondary Color",
+                value=st.session_state.custom_colors['secondary'] if st.session_state.custom_colors else brand['colors']['secondary'],
+                help="Used for backgrounds and accents",
+                key="secondary_color_picker"
+            )
+
+        with col3:
+            accent_color = st.color_picker(
+                "Accent Color",
+                value=st.session_state.custom_colors['accent'] if st.session_state.custom_colors else brand['colors']['accent'],
+                help="Used for highlights and special elements",
+                key="accent_color_picker"
+            )
+
+        # Store custom colors
+        st.session_state.custom_colors = {
+            'primary': primary_color,
+            'secondary': secondary_color,
+            'accent': accent_color
+        }
+
+        # Show color preview
+        st.markdown("**Color Preview:**")
+        st.markdown(
+            f'''<div style="display: flex; gap: 10px; margin: 10px 0;">
+                <div style="width: 100px; height: 50px; background-color: {primary_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Primary</div>
+                <div style="width: 100px; height: 50px; background-color: {secondary_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Secondary</div>
+                <div style="width: 100px; height: 50px; background-color: {accent_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Accent</div>
+            </div>''',
+            unsafe_allow_html=True
+        )
 
     st.divider()
-    if st.button("← Back to Philosophy"):
-        st.session_state.step = 3
-        st.rerun()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("← Back to Philosophy"):
+            st.session_state.step = 3
+            st.session_state.style_selected = False
+            st.rerun()
+
+    with col2:
+        if st.session_state.style_selected:
+            if st.button("Continue to CTAs →", type="primary", use_container_width=True):
+                st.session_state.step = 5
+                st.rerun()
 
 # ============================================================================
 # STEP 5: CTA CONFIGURATION
@@ -1040,26 +1200,10 @@ elif st.session_state.step == 8:
         progress_bar = st.progress(0)
         status_text = st.empty()
 
-        # Generate HTML
-        status_text.text("🎨 Generating your landing page HTML...")
-        progress_bar.progress(25)
-
-        html = generate_landing_page(
-            brand=st.session_state.brand_data,
-            philosophy=st.session_state.philosophy,
-            style=st.session_state.style,
-            cta=st.session_state.cta,
-            intent=st.session_state.intent_raw,
-            copy_preview=st.session_state.get('copy_preview'),
-            feedback=st.session_state.get('copy_feedback')
-        )
-        st.session_state.html = html
-        progress_bar.progress(50)
-
-        # Generate media if requested
+        # Generate media FIRST if requested
         if st.session_state.media.get('generate_image'):
             status_text.text("🖼️ Generating hero image with DALL-E 3...")
-            progress_bar.progress(75)
+            progress_bar.progress(25)
             try:
                 image_url = generate_image(
                     brand=st.session_state.brand_data,
@@ -1071,6 +1215,24 @@ elif st.session_state.step == 8:
                     st.success(f"✅ Hero image generated!")
             except Exception as e:
                 st.warning(f"⚠️ Image generation failed: {str(e)}")
+            progress_bar.progress(50)
+
+        # Generate HTML with the hero image
+        status_text.text("🎨 Generating your landing page HTML...")
+        progress_bar.progress(75)
+
+        html = generate_landing_page(
+            brand=st.session_state.brand_data,
+            philosophy=st.session_state.philosophy,
+            style=st.session_state.style,
+            cta=st.session_state.cta,
+            intent=st.session_state.intent_raw,
+            copy_preview=st.session_state.get('copy_preview'),
+            feedback=st.session_state.get('copy_feedback'),
+            hero_image_url=st.session_state.get('generated_image'),
+            brand_id=st.session_state.brand
+        )
+        st.session_state.html = html
 
         progress_bar.progress(100)
         status_text.text("✅ Landing page generated successfully!")
