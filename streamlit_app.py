@@ -102,6 +102,59 @@ def get_secret(key):
         # Fall back to environment variable (for local development)
         return os.getenv(key)
 
+def is_valid_url(url):
+    """Validate URL format"""
+    import re
+    if not url:
+        return False
+    # Check for http:// or https://
+    pattern = re.compile(r'^https?://.+')
+    return bool(pattern.match(url))
+
+def get_contrast_text_color(hex_color):
+    """Return black or white text color based on background luminance"""
+    try:
+        # Remove # if present
+        hex_color = hex_color.lstrip('#')
+        # Convert to RGB
+        r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+        # Calculate relative luminance
+        luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+        # Return black for light backgrounds, white for dark
+        return '#000000' if luminance > 0.5 else '#FFFFFF'
+    except:
+        return '#FFFFFF'  # Default to white if error
+
+def check_color_accessibility(bg_color, text_color='#FFFFFF'):
+    """Check WCAG contrast ratio between background and text colors"""
+    try:
+        def get_luminance(hex_color):
+            hex_color = hex_color.lstrip('#')
+            r, g, b = [int(hex_color[i:i+2], 16) / 255 for i in (0, 2, 4)]
+            # Convert to linear RGB
+            r = r / 12.92 if r <= 0.03928 else ((r + 0.055) / 1.055) ** 2.4
+            g = g / 12.92 if g <= 0.03928 else ((g + 0.055) / 1.055) ** 2.4
+            b = b / 12.92 if b <= 0.03928 else ((b + 0.055) / 1.055) ** 2.4
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+        l1 = get_luminance(bg_color)
+        l2 = get_luminance(text_color)
+
+        # Calculate contrast ratio
+        lighter = max(l1, l2)
+        darker = min(l1, l2)
+        ratio = (lighter + 0.05) / (darker + 0.05)
+
+        # WCAG AA requires 4.5:1 for normal text, 3:1 for large text
+        if ratio >= 4.5:
+            return "✅ Excellent", ratio
+        elif ratio >= 3.0:
+            return "⚠️ Good for large text only", ratio
+        else:
+            return "❌ Poor contrast", ratio
+    except:
+        return "❓ Unable to check", 1.0
+
 def parse_intent(user_input):
     """Parse user intent using Claude API"""
     try:
@@ -680,6 +733,27 @@ for i, (col, step_name) in enumerate(zip(cols, steps)):
 st.divider()
 
 # ============================================================================
+# START OVER BUTTON (Sidebar)
+# ============================================================================
+with st.sidebar:
+    st.markdown("### 🔄 Quick Actions")
+    if st.button("🔄 Start New Landing Page", use_container_width=True, type="secondary"):
+        # Reset all session state
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.rerun()
+
+    if st.session_state.step > 1:
+        st.divider()
+        st.markdown("### 📊 Current Settings")
+        if st.session_state.get('brand_data'):
+            st.caption(f"**Brand:** {st.session_state.brand_data['name']}")
+        if st.session_state.get('philosophy'):
+            st.caption(f"**Philosophy:** {st.session_state.philosophy}")
+        if st.session_state.get('style'):
+            st.caption(f"**Style:** {st.session_state.style}")
+
+# ============================================================================
 # STEP 1: INTENT CAPTURE
 # ============================================================================
 if st.session_state.step == 1:
@@ -687,22 +761,41 @@ if st.session_state.step == 1:
     st.markdown('<div class="sub-header">Create professional landing pages in minutes with AI</div>', unsafe_allow_html=True)
     st.markdown("### 💭 What are you looking to create today?")
 
-    with st.expander("💡 Need inspiration? See examples"):
-        st.markdown("""
-        **Example requests:**
-        - "Landing page for free O-1 visa webinar to capture athlete emails"
-        - "Conversion page for automation service targeting small businesses"
-        - "Lead magnet for immigration law firm offering visa assessment"
-        - "Product launch page for SaaS tool with free trial offer"
-        - "Event registration page for legal tech conference"
-        """)
+    # Template Library
+    st.info("✨ **Quick Start**: Choose a template below or describe your own custom landing page")
+
+    templates = {
+        "🎓 Webinar Registration": "Landing page for free O-1 visa eligibility webinar to capture athlete emails and book consultation calls",
+        "📧 Lead Magnet Download": "Lead magnet page offering free immigration checklist download in exchange for email address",
+        "🚀 Service Launch": "Product launch page for automation service targeting small businesses with free trial offer",
+        "📞 Free Consultation": "Conversion page to book free visa consultation calls with calendar integration",
+        "🎯 Event Registration": "Event registration page for immigration law conference with early bird discount",
+        "💼 Case Study Showcase": "Landing page showcasing successful visa case studies to build credibility and capture leads"
+    }
+
+    cols = st.columns(3)
+    for idx, (template_name, template_desc) in enumerate(templates.items()):
+        with cols[idx % 3]:
+            if st.button(template_name, key=f"template_{idx}", use_container_width=True):
+                st.session_state.template_selected = template_desc
+                st.rerun()
+
+    st.divider()
+
+    # Initialize user input from template if selected
+    default_value = st.session_state.get('template_selected', '')
 
     user_input = st.text_area(
-        "Describe your goal:",
+        "Describe your goal (or customize the template above):",
+        value=default_value,
         height=150,
         placeholder="Example: I need a landing page that helps athletes understand O-1 visa eligibility and captures their email for a free consultation.",
         key="intent_input"
     )
+
+    # Clear template selection after it's used
+    if st.session_state.get('template_selected'):
+        st.session_state.template_selected = None
 
     col1, col2 = st.columns([3, 1])
     with col2:
@@ -736,17 +829,18 @@ elif st.session_state.step == 2:
                 st.subheader(brand['name'])
                 st.caption(brand['website'])
 
-                color_cols = st.columns(3)
-                for i, (color_name, color_value) in enumerate(list(brand['colors'].items())[:3]):
-                    with color_cols[i]:
-                        st.color_picker(
-                            color_name.title(),
-                            color_value,
-                            disabled=True,
-                            key=f"c_{brand_id}_{i}",
-                            label_visibility="collapsed"
-                        )
-                        st.caption(color_name.title())
+                # Color preview banner
+                primary = brand['colors']['primary']
+                secondary = brand['colors']['secondary']
+                accent = brand['colors']['accent']
+                st.markdown(
+                    f'''<div style="display: flex; height: 40px; margin: 10px 0; border-radius: 8px; overflow: hidden; border: 2px solid #e0e0e0;">
+                        <div style="flex: 1; background-color: {primary}; display: flex; align-items: center; justify-content: center; color: {get_contrast_text_color(primary)}; font-size: 0.75rem; font-weight: bold;">PRIMARY</div>
+                        <div style="flex: 1; background-color: {secondary}; display: flex; align-items: center; justify-content: center; color: {get_contrast_text_color(secondary)}; font-size: 0.75rem; font-weight: bold;">SECONDARY</div>
+                        <div style="flex: 1; background-color: {accent}; display: flex; align-items: center; justify-content: center; color: {get_contrast_text_color(accent)}; font-size: 0.75rem; font-weight: bold;">ACCENT</div>
+                    </div>''',
+                    unsafe_allow_html=True
+                )
 
                 if st.button(f"Select {brand['name']}", key=brand_id, use_container_width=True, type="primary"):
                     st.session_state.brand = brand_id
@@ -944,16 +1038,37 @@ elif st.session_state.step == 4:
             'accent': accent_color
         }
 
-        # Show color preview
+        # Show color preview with smart text colors
         st.markdown("**Color Preview:**")
+        primary_text = get_contrast_text_color(primary_color)
+        secondary_text = get_contrast_text_color(secondary_color)
+        accent_text = get_contrast_text_color(accent_color)
+
         st.markdown(
             f'''<div style="display: flex; gap: 10px; margin: 10px 0;">
-                <div style="width: 100px; height: 50px; background-color: {primary_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Primary</div>
-                <div style="width: 100px; height: 50px; background-color: {secondary_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Secondary</div>
-                <div style="width: 100px; height: 50px; background-color: {accent_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">Accent</div>
+                <div style="width: 100px; height: 50px; background-color: {primary_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: {primary_text}; font-weight: bold;">Primary</div>
+                <div style="width: 100px; height: 50px; background-color: {secondary_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: {secondary_text}; font-weight: bold;">Secondary</div>
+                <div style="width: 100px; height: 50px; background-color: {accent_color}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: {accent_text}; font-weight: bold;">Accent</div>
             </div>''',
             unsafe_allow_html=True
         )
+
+        # Accessibility check
+        st.markdown("**♿ Accessibility Check:**")
+        status_primary, ratio_primary = check_color_accessibility(primary_color, '#FFFFFF')
+        status_secondary, ratio_secondary = check_color_accessibility(secondary_color, '#FFFFFF')
+        status_accent, ratio_accent = check_color_accessibility(accent_color, '#FFFFFF')
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.caption(f"Primary: {status_primary}")
+            st.caption(f"Ratio: {ratio_primary:.2f}:1")
+        with col2:
+            st.caption(f"Secondary: {status_secondary}")
+            st.caption(f"Ratio: {ratio_secondary:.2f}:1")
+        with col3:
+            st.caption(f"Accent: {status_accent}")
+            st.caption(f"Ratio: {ratio_accent:.2f}:1")
 
     st.divider()
 
@@ -962,6 +1077,7 @@ elif st.session_state.step == 4:
         if st.button("← Back to Philosophy"):
             st.session_state.step = 3
             st.session_state.style_selected = False
+            st.session_state.custom_colors = None  # Reset custom colors
             st.rerun()
 
     with col2:
@@ -1021,9 +1137,9 @@ elif st.session_state.step == 5:
         if cta_url:
             st.session_state.cta_url_value = cta_url
 
-    # Preview
+    # Preview - use custom colors if available
     st.markdown("**Preview:**")
-    preview_color = brand['colors']['primary']
+    preview_color = st.session_state.custom_colors['primary'] if st.session_state.custom_colors else brand['colors']['primary']
     st.markdown(
         f'<a href="#" style="background-color: {preview_color}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">{cta_text}</a>',
         unsafe_allow_html=True
@@ -1055,9 +1171,19 @@ elif st.session_state.step == 5:
 
     st.divider()
 
-    # Show a warning if inputs are empty
+    # Validation warnings
+    has_errors = False
     if not cta_text or not cta_url:
         st.warning("⚠️ Please fill in both the CTA Button Text and CTA URL to continue")
+        has_errors = True
+    elif cta_url and not is_valid_url(cta_url):
+        st.error("❌ Invalid URL format. Please include http:// or https:// (e.g., https://example.com)")
+        has_errors = True
+
+    # Validate secondary CTA URL if provided
+    if include_secondary and sec_url and not is_valid_url(sec_url):
+        st.error("❌ Invalid Secondary URL format. Please include http:// or https://")
+        has_errors = True
 
     col1, col2 = st.columns(2)
     with col1:
@@ -1066,7 +1192,7 @@ elif st.session_state.step == 5:
             st.rerun()
 
     with col2:
-        if st.button("Continue to Media Options →", type="primary", disabled=not (cta_text and cta_url), use_container_width=True):
+        if st.button("Continue to Media Options →", type="primary", disabled=has_errors, use_container_width=True):
             st.session_state.cta = {
                 'primary': {'text': cta_text, 'url': cta_url}
             }
@@ -1134,7 +1260,7 @@ elif st.session_state.step == 7:
 
     # Generate copy preview if not already done
     if not st.session_state.get('copy_preview'):
-        with st.spinner("✍️ Generating content outline..."):
+        with st.spinner("✍️ Generating content outline... ⏱️ 10-20 seconds"):
             copy_preview = generate_copy_preview(
                 brand=st.session_state.brand_data,
                 philosophy=st.session_state.philosophy,
@@ -1149,21 +1275,42 @@ elif st.session_state.step == 7:
 
     # Display the copy preview
     if st.session_state.get('copy_preview'):
-        st.info("💡 Review the content below. You can go back to adjust settings or continue to generate HTML.")
+        st.info("💡 Review and edit the content below, or add feedback for AI adjustments")
 
-        # Show the copy in a nice formatted way
-        st.markdown("### 📄 Content Preview")
-        st.markdown(st.session_state.copy_preview)
+        # Tabs for viewing vs editing
+        tab1, tab2 = st.tabs(["📄 View Copy", "✏️ Edit Copy"])
+
+        with tab1:
+            st.markdown("### Content Preview (Read-Only)")
+            st.markdown(st.session_state.copy_preview)
+
+        with tab2:
+            st.markdown("### Edit Your Copy")
+            st.caption("Edit the copy directly. Your changes will be used when generating the HTML.")
+
+            edited_copy = st.text_area(
+                "Copy Content",
+                value=st.session_state.copy_preview,
+                height=400,
+                key="copy_editor",
+                help="Edit the copy directly here"
+            )
+
+            if st.button("💾 Save Edits", type="secondary"):
+                st.session_state.copy_preview = edited_copy
+                st.success("✅ Copy updated! Switch to View tab to see formatted version.")
+                st.rerun()
 
         st.divider()
 
-        # Option to edit/provide feedback
-        with st.expander("💬 Add Feedback or Adjustments (Optional)"):
+        # Option for AI feedback
+        with st.expander("🤖 Let AI Adjust the Copy (Optional)"):
             feedback = st.text_area(
-                "Any changes you'd like to make?",
+                "Describe what changes you'd like AI to make:",
                 placeholder="e.g., 'Make the headline more compelling' or 'Focus more on benefits than features'",
-                help="This feedback will be incorporated when generating the HTML",
-                height=100
+                help="This feedback will be sent to AI when generating the HTML",
+                height=100,
+                key="copy_feedback_input"
             )
             if feedback:
                 st.session_state.copy_feedback = feedback
@@ -1202,7 +1349,7 @@ elif st.session_state.step == 8:
 
         # Generate media FIRST if requested
         if st.session_state.media.get('generate_image'):
-            status_text.text("🖼️ Generating hero image with DALL-E 3...")
+            status_text.text("🖼️ Generating hero image with DALL-E 3... ⏱️ This takes 30-60 seconds")
             progress_bar.progress(25)
             try:
                 image_url = generate_image(
@@ -1218,7 +1365,7 @@ elif st.session_state.step == 8:
             progress_bar.progress(50)
 
         # Generate HTML with the hero image
-        status_text.text("🎨 Generating your landing page HTML...")
+        status_text.text("🎨 Generating your landing page HTML... ⏱️ 15-30 seconds")
         progress_bar.progress(75)
 
         html = generate_landing_page(
@@ -1238,6 +1385,28 @@ elif st.session_state.step == 8:
         status_text.text("✅ Landing page generated successfully!")
 
     st.success("✅ Your landing page is ready!")
+
+    # Prominent Download Button
+    st.markdown("### 📥 Download Your Landing Page")
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.download_button(
+            label="⬇️ Download HTML File",
+            data=st.session_state.html,
+            file_name=f"landing-{st.session_state.brand}-{datetime.now().strftime('%Y%m%d-%H%M')}.html",
+            mime="text/html",
+            use_container_width=True,
+            type="primary",
+            help="Download the complete HTML file with inline CSS"
+        )
+    with col2:
+        # Create data URI for opening in new tab
+        import base64
+        b64_html = base64.b64encode(st.session_state.html.encode()).decode()
+        href = f'data:text/html;base64,{b64_html}'
+        st.markdown(f'<a href="{href}" target="_blank" style="text-decoration: none;"><button style="width:100%; padding:0.58rem; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:1rem;">🔗 Open in New Tab</button></a>', unsafe_allow_html=True)
+
+    st.divider()
 
     # Show generated image if available
     if st.session_state.get('generated_image'):
