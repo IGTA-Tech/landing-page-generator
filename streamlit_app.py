@@ -87,14 +87,17 @@ def load_philosophy():
         st.error("philosophy.json not found. Please ensure config/philosophy.json exists.")
         return {}
 
-@st.cache_data
+@st.cache_data(ttl=3600)  # Cache for 1 hour
 def load_verified_content():
     """Load verified content from crawled websites"""
     try:
         with open('config/verified_content.json', 'r') as f:
             return json.load(f)
     except FileNotFoundError:
-        st.warning("verified_content.json not found. Testimonials will be disabled.")
+        st.warning("⚠️ verified_content.json not found. Run `python3 crawl_websites.py` to extract real testimonials.")
+        return {}
+    except json.JSONDecodeError as e:
+        st.error(f"❌ Error parsing verified_content.json: {e}")
         return {}
 
 def get_secret(key):
@@ -1041,6 +1044,13 @@ st.markdown("""
 # PROGRESS INDICATOR
 # ============================================================================
 st.markdown("### 📍 Your Progress")
+
+# Progress percentage
+progress_pct = ((st.session_state.step - 1) / 8) * 100
+st.progress(progress_pct / 100)
+st.caption(f"Step {st.session_state.step} of 8 ({int(progress_pct)}% complete)")
+
+# Step indicators
 cols = st.columns(8)
 steps = ["Intent", "Brand", "Philosophy", "Style", "CTAs", "Media", "Copy Review", "Generate"]
 for i, (col, step_name) in enumerate(zip(cols, steps)):
@@ -1734,12 +1744,21 @@ elif st.session_state.step == 8:
 
     # Generate if not already generated
     if not st.session_state.get('html'):
+        # Show estimated total time
+        estimated_time = 15  # Base time for HTML generation
+        if st.session_state.media.get('generate_image'):
+            estimated_time += 45  # Add time for image generation
+        if st.session_state.ab_testing:
+            estimated_time += 20  # Add time for variation B
+
+        st.info(f"⏱️ Estimated generation time: {estimated_time}-{estimated_time + 30} seconds")
+
         progress_bar = st.progress(0)
         status_text = st.empty()
 
         # Generate media FIRST if requested
         if st.session_state.media.get('generate_image'):
-            status_text.text("🖼️ Generating hero image with DALL-E 3... ⏱️ This takes 30-60 seconds")
+            status_text.text("🖼️ Generating hero image with DALL-E 3... ⏱️ 30-60 seconds")
             progress_bar.progress(25)
             try:
                 image_url = generate_image(
@@ -2063,7 +2082,16 @@ elif st.session_state.step == 8:
                         track_analytics_event("deployed_to_netlify", {"url": url})
                         st.balloons()
                     else:
-                        st.error("❌ Deployment failed. Please check your Netlify token and try again.")
+                        st.error("❌ Deployment failed.")
+                        st.warning("**Common issues:**")
+                        st.markdown("- Subdomain might already exist (try a different name)")
+                        st.markdown("- Netlify token might be invalid (check Streamlit secrets)")
+                        st.markdown("- Network connectivity issues")
+
+                        # Suggest alternative subdomain
+                        alt_subdomain = f"{subdomain}-{datetime.now().strftime('%H%M%S')}"
+                        st.info(f"💡 **Suggestion:** Try subdomain `{alt_subdomain}`")
+
                         track_analytics_event("deployment_failed")
 
 # ============================================================================
