@@ -50,6 +50,10 @@ if 'preview_mode' not in st.session_state:
     st.session_state.preview_mode = 'desktop'
 if 'show_html_editor' not in st.session_state:
     st.session_state.show_html_editor = False
+if 'copy_preview' not in st.session_state:
+    st.session_state.copy_preview = None
+if 'copy_approved' not in st.session_state:
+    st.session_state.copy_approved = False
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -116,7 +120,64 @@ Keep it concise and actionable."""
         st.error(f"Error parsing intent: {str(e)}")
         return f"Error: {str(e)}"
 
-def generate_landing_page(brand, philosophy, style, cta, intent):
+def generate_copy_preview(brand, philosophy, style, cta, intent):
+    """Generate copy/content preview before HTML generation"""
+    try:
+        api_key = get_secret('ANTHROPIC_API_KEY')
+        if not api_key:
+            st.error("ANTHROPIC_API_KEY not set in secrets or environment")
+            return None
+
+        client = Anthropic(api_key=api_key)
+
+        # Load philosophy details
+        phil_data = load_philosophy()
+        phil_info = phil_data.get(philosophy, {})
+
+        prompt = f"""Generate a detailed content outline for a landing page. DO NOT write HTML - just the copy and content structure.
+
+BRAND INFORMATION:
+- Brand Name: {brand['name']}
+- Primary Color: {brand['colors']['primary']}
+- Website: {brand['website']}
+
+PHILOSOPHY: {philosophy}
+{json.dumps(phil_info, indent=2)}
+
+DESIGN STYLE: {style}
+
+CALL-TO-ACTION:
+- Primary: {cta['primary']['text']} → {cta['primary']['url']}
+{'- Secondary: ' + cta.get('secondary', {}).get('text', '') + ' → ' + cta.get('secondary', {}).get('url', '') if 'secondary' in cta else ''}
+
+USER GOAL/INTENT:
+{intent}
+
+Please provide:
+1. **Page Title** - The main headline (H1)
+2. **Subheadline** - Supporting text under the headline
+3. **Section Breakdown** - List each section with:
+   - Section title
+   - Key message/copy
+   - Purpose
+4. **Key Benefits** - 3-5 bullet points
+5. **Meta Description** - For SEO (150-160 characters)
+6. **Meta Title** - For browser tab (50-60 characters)
+
+Format as clear, structured text that I can review and approve before HTML generation."""
+
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        return response.content[0].text
+    except Exception as e:
+        st.error(f"Error generating copy preview: {str(e)}")
+        return None
+
+def generate_landing_page(brand, philosophy, style, cta, intent, copy_preview=None, feedback=None):
     """Generate landing page HTML using Claude API"""
     try:
         api_key = get_secret('ANTHROPIC_API_KEY')
@@ -130,7 +191,26 @@ def generate_landing_page(brand, philosophy, style, cta, intent):
         phil_data = load_philosophy()
         phil_info = phil_data.get(philosophy, {})
 
+        # Build copy guidance section
+        copy_guidance = ""
+        if copy_preview:
+            copy_guidance = f"""
+APPROVED COPY OUTLINE:
+{copy_preview}
+
+Use this approved copy as the foundation for your HTML content.
+"""
+
+        if feedback:
+            copy_guidance += f"""
+USER FEEDBACK/ADJUSTMENTS:
+{feedback}
+
+Please incorporate this feedback into the final HTML.
+"""
+
         prompt = f"""Create a complete, production-ready HTML landing page with inline CSS and JavaScript.
+{copy_guidance}
 
 BRAND INFORMATION:
 - Brand Name: {brand['name']}
@@ -490,15 +570,15 @@ st.markdown("""
 # ============================================================================
 # PROGRESS INDICATOR
 # ============================================================================
-st.markdown("### Progress")
-cols = st.columns(7)
-steps = ["Intent", "Brand", "Philosophy", "Style", "CTAs", "Media", "Generate"]
+st.markdown("### 📍 Your Progress")
+cols = st.columns(8)
+steps = ["Intent", "Brand", "Philosophy", "Style", "CTAs", "Media", "Copy Review", "Generate"]
 for i, (col, step_name) in enumerate(zip(cols, steps)):
     with col:
         if i + 1 < st.session_state.step:
             st.success(f"✅ {step_name}")
         elif i + 1 == st.session_state.step:
-            st.info(f"➡️ {step_name}")
+            st.info(f"**➡️ {step_name}**")
         else:
             st.text(f"⭕ {step_name}")
 
@@ -734,13 +814,13 @@ elif st.session_state.step == 4:
 # STEP 5: CTA CONFIGURATION
 # ============================================================================
 elif st.session_state.step == 5:
-    st.markdown('<div class="main-header">Configure Call-to-Action</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">⚡ Configure Call-to-Action</div>', unsafe_allow_html=True)
     st.caption(f"Brand: {st.session_state.brand_data['name']} | Style: {st.session_state.style}")
 
     brand = st.session_state.brand_data
     phil = st.session_state.philosophy
 
-    # Default CTA based on philosophy
+    # Default CTA based on philosophy (only if not already set)
     if phil == 'assessment-funnel':
         default_text = "Take the Free Assessment"
         default_url = brand['ctas']['top']['url']
@@ -748,14 +828,38 @@ elif st.session_state.step == 5:
         default_text = brand['ctas']['middle']['text']
         default_url = brand['ctas']['middle']['url']
 
+    # Use session state to preserve values if already set
+    if 'cta_text_value' not in st.session_state:
+        st.session_state.cta_text_value = default_text
+    if 'cta_url_value' not in st.session_state:
+        st.session_state.cta_url_value = default_url
+
+    st.info("💡 These are the main action buttons on your landing page. Customize the text and destination URL.")
+
     st.subheader("Primary Call-to-Action")
     col1, col2 = st.columns(2)
 
     with col1:
-        cta_text = st.text_input("CTA Button Text", value=default_text, key="cta_text_input")
+        cta_text = st.text_input(
+            "CTA Button Text",
+            value=st.session_state.cta_text_value,
+            key="cta_text_input",
+            help="The text that appears on your main call-to-action button",
+            placeholder="e.g., Get Started, Sign Up, Learn More"
+        )
+        if cta_text:
+            st.session_state.cta_text_value = cta_text
 
     with col2:
-        cta_url = st.text_input("CTA URL", value=default_url, key="cta_url_input")
+        cta_url = st.text_input(
+            "CTA URL",
+            value=st.session_state.cta_url_value,
+            key="cta_url_input",
+            help="Where the button links to when clicked",
+            placeholder="https://example.com/signup"
+        )
+        if cta_url:
+            st.session_state.cta_url_value = cta_url
 
     # Preview
     st.markdown("**Preview:**")
@@ -768,16 +872,32 @@ elif st.session_state.step == 5:
     st.divider()
 
     st.subheader("Secondary Call-to-Action (Optional)")
-    include_secondary = st.checkbox("Add secondary CTA?", key="secondary_cta_checkbox")
+    include_secondary = st.checkbox("Add secondary CTA?", key="secondary_cta_checkbox", help="Add a second button for alternative actions")
 
+    sec_text = None
+    sec_url = None
     if include_secondary:
         col1, col2 = st.columns(2)
         with col1:
-            sec_text = st.text_input("Secondary CTA Text", value="Learn More", key="sec_cta_text")
+            sec_text = st.text_input(
+                "Secondary CTA Text",
+                value="Learn More",
+                key="sec_cta_text",
+                placeholder="e.g., Learn More, Contact Us"
+            )
         with col2:
-            sec_url = st.text_input("Secondary URL", value=brand['website'], key="sec_cta_url")
+            sec_url = st.text_input(
+                "Secondary URL",
+                value=brand['website'],
+                key="sec_cta_url",
+                placeholder="https://example.com"
+            )
 
     st.divider()
+
+    # Show a warning if inputs are empty
+    if not cta_text or not cta_url:
+        st.warning("⚠️ Please fill in both the CTA Button Text and CTA URL to continue")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -786,7 +906,7 @@ elif st.session_state.step == 5:
             st.rerun()
 
     with col2:
-        if st.button("Continue →", type="primary", disabled=not (cta_text and cta_url), use_container_width=True):
+        if st.button("Continue to Media Options →", type="primary", disabled=not (cta_text and cta_url), use_container_width=True):
             st.session_state.cta = {
                 'primary': {'text': cta_text, 'url': cta_url}
             }
@@ -846,9 +966,73 @@ elif st.session_state.step == 6:
             st.rerun()
 
 # ============================================================================
-# STEP 7: GENERATE & PREVIEW
+# STEP 7: COPY PREVIEW & APPROVAL
 # ============================================================================
 elif st.session_state.step == 7:
+    st.markdown('<div class="main-header">📝 Review Your Copy & Content</div>', unsafe_allow_html=True)
+    st.caption("Review the headlines, text, and structure before generating HTML")
+
+    # Generate copy preview if not already done
+    if not st.session_state.get('copy_preview'):
+        with st.spinner("✍️ Generating content outline..."):
+            copy_preview = generate_copy_preview(
+                brand=st.session_state.brand_data,
+                philosophy=st.session_state.philosophy,
+                style=st.session_state.style,
+                cta=st.session_state.cta,
+                intent=st.session_state.intent_raw
+            )
+            if copy_preview:
+                st.session_state.copy_preview = copy_preview
+            else:
+                st.error("Failed to generate copy preview. Please try again.")
+
+    # Display the copy preview
+    if st.session_state.get('copy_preview'):
+        st.info("💡 Review the content below. You can go back to adjust settings or continue to generate HTML.")
+
+        # Show the copy in a nice formatted way
+        st.markdown("### 📄 Content Preview")
+        st.markdown(st.session_state.copy_preview)
+
+        st.divider()
+
+        # Option to edit/provide feedback
+        with st.expander("💬 Add Feedback or Adjustments (Optional)"):
+            feedback = st.text_area(
+                "Any changes you'd like to make?",
+                placeholder="e.g., 'Make the headline more compelling' or 'Focus more on benefits than features'",
+                help="This feedback will be incorporated when generating the HTML",
+                height=100
+            )
+            if feedback:
+                st.session_state.copy_feedback = feedback
+
+        st.divider()
+
+        col1, col2, col3 = st.columns([1, 1, 1])
+
+        with col1:
+            if st.button("← Back to Media"):
+                st.session_state.step = 6
+                st.session_state.copy_preview = None  # Clear to regenerate if they come back
+                st.rerun()
+
+        with col2:
+            if st.button("🔄 Regenerate Copy", help="Generate new copy with different approach"):
+                st.session_state.copy_preview = None
+                st.rerun()
+
+        with col3:
+            if st.button("Continue to HTML →", type="primary", use_container_width=True):
+                st.session_state.copy_approved = True
+                st.session_state.step = 8
+                st.rerun()
+
+# ============================================================================
+# STEP 8: GENERATE HTML & PREVIEW
+# ============================================================================
+elif st.session_state.step == 8:
     st.markdown('<div class="main-header">Generate Your Landing Page</div>', unsafe_allow_html=True)
 
     # Generate if not already generated
@@ -865,7 +1049,9 @@ elif st.session_state.step == 7:
             philosophy=st.session_state.philosophy,
             style=st.session_state.style,
             cta=st.session_state.cta,
-            intent=st.session_state.intent_raw
+            intent=st.session_state.intent_raw,
+            copy_preview=st.session_state.get('copy_preview'),
+            feedback=st.session_state.get('copy_feedback')
         )
         st.session_state.html = html
         progress_bar.progress(50)
