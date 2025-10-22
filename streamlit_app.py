@@ -58,6 +58,10 @@ if 'custom_colors' not in st.session_state:
     st.session_state.custom_colors = None
 if 'style_selected' not in st.session_state:
     st.session_state.style_selected = False
+if 'ab_testing' not in st.session_state:
+    st.session_state.ab_testing = False
+if 'variation_b' not in st.session_state:
+    st.session_state.variation_b = None
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -537,6 +541,48 @@ def save_to_airtable(data):
         st.error(f"Error saving to Airtable: {str(e)}")
         return None
 
+def track_analytics_event(event_type, data=None):
+    """Track user analytics events to Airtable for funnel optimization"""
+    try:
+        airtable_key = get_secret('AIRTABLE_API_KEY')
+        base_id = get_secret('AIRTABLE_BASE_ID')
+
+        if not airtable_key or not base_id:
+            # Analytics is optional, don't show error to user
+            return None
+
+        url = f"https://api.airtable.com/v0/{base_id}/Analytics"
+        headers = {
+            "Authorization": f"Bearer {airtable_key}",
+            "Content-Type": "application/json"
+        }
+
+        # Get session ID (create if doesn't exist)
+        if 'session_id' not in st.session_state:
+            import uuid
+            st.session_state.session_id = str(uuid.uuid4())[:8]
+
+        record = {
+            "fields": {
+                "SessionID": st.session_state.session_id,
+                "EventType": event_type,
+                "Timestamp": datetime.now().isoformat(),
+                "StepNumber": st.session_state.get('step', 0),
+                "Brand": st.session_state.get('brand', ''),
+                "Philosophy": st.session_state.get('philosophy', ''),
+                "Style": st.session_state.get('style', ''),
+                "ABTesting": st.session_state.get('ab_testing', False),
+                "Data": json.dumps(data) if data else ''
+            }
+        }
+
+        # Send async (don't block UI)
+        response = requests.post(url, json=record, headers=headers, timeout=2)
+        return response.json() if response.status_code in [200, 201] else None
+    except:
+        # Silently fail - analytics shouldn't break the app
+        return None
+
 # ============================================================================
 # MODERN CSS STYLING
 # ============================================================================
@@ -743,6 +789,51 @@ with st.sidebar:
             del st.session_state[key]
         st.rerun()
 
+    # Save/Load Configuration
+    if st.session_state.step > 1:
+        st.divider()
+        st.markdown("### 💾 Save/Load Config")
+
+        # Create configuration dict
+        config = {
+            'intent_raw': st.session_state.get('intent_raw'),
+            'brand': st.session_state.get('brand'),
+            'philosophy': st.session_state.get('philosophy'),
+            'style': st.session_state.get('style'),
+            'custom_colors': st.session_state.get('custom_colors'),
+            'cta': st.session_state.get('cta'),
+            'media': st.session_state.get('media'),
+        }
+
+        # Download config
+        config_json = json.dumps(config, indent=2)
+        st.download_button(
+            label="💾 Save Config",
+            data=config_json,
+            file_name=f"landing-config-{datetime.now().strftime('%Y%m%d')}.json",
+            mime="application/json",
+            use_container_width=True,
+            help="Save your current configuration to reuse later"
+        )
+
+        # Load config
+        uploaded_file = st.file_uploader("📁 Load Config", type=['json'], help="Upload a previously saved configuration")
+        if uploaded_file:
+            try:
+                loaded_config = json.load(uploaded_file)
+                # Apply loaded config to session state
+                for key, value in loaded_config.items():
+                    if value is not None:
+                        st.session_state[key] = value
+                # Reload brand data if brand ID exists
+                if loaded_config.get('brand'):
+                    brands = load_brands()
+                    st.session_state.brand_data = brands.get(loaded_config['brand'])
+                st.success("✅ Configuration loaded!")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error loading config: {str(e)}")
+
     if st.session_state.step > 1:
         st.divider()
         st.markdown("### 📊 Current Settings")
@@ -804,6 +895,8 @@ if st.session_state.step == 1:
                 st.session_state.intent = parse_intent(user_input)
                 st.session_state.intent_raw = user_input
                 st.session_state.step = 2
+                # Track analytics
+                track_analytics_event("intent_submitted", {"intent_length": len(user_input)})
                 st.rerun()
 
 # ============================================================================
@@ -846,6 +939,8 @@ elif st.session_state.step == 2:
                     st.session_state.brand = brand_id
                     st.session_state.brand_data = brand
                     st.session_state.step = 3
+                    # Track analytics
+                    track_analytics_event("brand_selected", {"brand": brand_id})
                     st.rerun()
 
                 st.markdown('</div>', unsafe_allow_html=True)
@@ -934,6 +1029,8 @@ elif st.session_state.step == 3:
                 if st.button(f"Select", key=f"phil_{phil_id}", type="primary", use_container_width=True):
                     st.session_state.philosophy = phil_id
                     st.session_state.step = 4
+                    # Track analytics
+                    track_analytics_event("philosophy_selected", {"philosophy": phil_id})
                     st.rerun()
 
     st.divider()
@@ -993,6 +1090,8 @@ elif st.session_state.step == 4:
                 if st.button(f"Select", key=style_id, use_container_width=True, type="primary"):
                     st.session_state.style = style_id
                     st.session_state.style_selected = True
+                    # Track analytics
+                    track_analytics_event("style_selected", {"style": style_id})
                     st.rerun()
                 st.markdown('</div>', unsafe_allow_html=True)
     else:
@@ -1317,6 +1416,21 @@ elif st.session_state.step == 7:
 
         st.divider()
 
+        # A/B Testing Option
+        st.markdown("### 🧪 A/B Testing (Optional)")
+        ab_test = st.checkbox(
+            "Generate 2 variations for A/B testing",
+            help="Creates Version A and Version B with different headlines and copy approaches",
+            key="ab_test_checkbox"
+        )
+        if ab_test:
+            st.info("💡 We'll generate 2 landing page variations:\n- **Version A**: Focus on benefits and results\n- **Version B**: Focus on pain points and urgency")
+            st.session_state.ab_testing = True
+        else:
+            st.session_state.ab_testing = False
+
+        st.divider()
+
         col1, col2, col3 = st.columns([1, 1, 1])
 
         with col1:
@@ -1381,30 +1495,93 @@ elif st.session_state.step == 8:
         )
         st.session_state.html = html
 
+        # Generate Variation B if A/B testing is enabled
+        if st.session_state.ab_testing and not st.session_state.get('variation_b'):
+            status_text.text("🧪 Generating Variation B for A/B testing... ⏱️ 15-30 seconds")
+            progress_bar.progress(85)
+
+            # Create alternative copy guidance for Variation B
+            variation_b_feedback = "Create a DIFFERENT approach: Focus on pain points, urgency, and what they're losing by not taking action. Use more emotional triggers and scarcity."
+
+            variation_b_html = generate_landing_page(
+                brand=st.session_state.brand_data,
+                philosophy=st.session_state.philosophy,
+                style=st.session_state.style,
+                cta=st.session_state.cta,
+                intent=st.session_state.intent_raw,
+                copy_preview=st.session_state.get('copy_preview'),
+                feedback=variation_b_feedback,
+                hero_image_url=st.session_state.get('generated_image'),
+                brand_id=st.session_state.brand
+            )
+            st.session_state.variation_b = variation_b_html
+
         progress_bar.progress(100)
-        status_text.text("✅ Landing page generated successfully!")
+        if st.session_state.ab_testing:
+            status_text.text("✅ Both variations generated successfully!")
+        else:
+            status_text.text("✅ Landing page generated successfully!")
 
-    st.success("✅ Your landing page is ready!")
+        # Track analytics
+        track_analytics_event("html_generated", {
+            "ab_testing": st.session_state.ab_testing,
+            "has_image": bool(st.session_state.get('generated_image'))
+        })
 
-    # Prominent Download Button
-    st.markdown("### 📥 Download Your Landing Page")
-    col1, col2, col3 = st.columns([2, 1, 1])
-    with col1:
-        st.download_button(
-            label="⬇️ Download HTML File",
-            data=st.session_state.html,
-            file_name=f"landing-{st.session_state.brand}-{datetime.now().strftime('%Y%m%d-%H%M')}.html",
-            mime="text/html",
-            use_container_width=True,
-            type="primary",
-            help="Download the complete HTML file with inline CSS"
-        )
-    with col2:
-        # Create data URI for opening in new tab
-        import base64
-        b64_html = base64.b64encode(st.session_state.html.encode()).decode()
-        href = f'data:text/html;base64,{b64_html}'
-        st.markdown(f'<a href="{href}" target="_blank" style="text-decoration: none;"><button style="width:100%; padding:0.58rem; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:1rem;">🔗 Open in New Tab</button></a>', unsafe_allow_html=True)
+    if st.session_state.ab_testing:
+        st.success("✅ Your A/B test variations are ready!")
+    else:
+        st.success("✅ Your landing page is ready!")
+
+    # Prominent Download Button(s)
+    if st.session_state.ab_testing:
+        st.markdown("### 📥 Download Your A/B Test Variations")
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown("#### 🅰️ Version A - Benefits Focused")
+            st.download_button(
+                label="⬇️ Download Version A",
+                data=st.session_state.html,
+                file_name=f"landing-{st.session_state.brand}-A-{datetime.now().strftime('%Y%m%d-%H%M')}.html",
+                mime="text/html",
+                use_container_width=True,
+                type="primary",
+                help="Benefits and results-focused approach",
+                key="download_variation_a"
+            )
+
+        with col2:
+            st.markdown("#### 🅱️ Version B - Pain Points & Urgency")
+            st.download_button(
+                label="⬇️ Download Version B",
+                data=st.session_state.variation_b,
+                file_name=f"landing-{st.session_state.brand}-B-{datetime.now().strftime('%Y%m%d-%H%M')}.html",
+                mime="text/html",
+                use_container_width=True,
+                type="primary",
+                help="Pain points and urgency-focused approach",
+                key="download_variation_b"
+            )
+    else:
+        st.markdown("### 📥 Download Your Landing Page")
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            st.download_button(
+                label="⬇️ Download HTML File",
+                data=st.session_state.html,
+                file_name=f"landing-{st.session_state.brand}-{datetime.now().strftime('%Y%m%d-%H%M')}.html",
+                mime="text/html",
+                use_container_width=True,
+                type="primary",
+                help="Download the complete HTML file with inline CSS"
+            )
+        with col2:
+            # Create data URI for opening in new tab
+            import base64
+            b64_html = base64.b64encode(st.session_state.html.encode()).decode()
+            href = f'data:text/html;base64,{b64_html}'
+            st.markdown(f'<a href="{href}" target="_blank" style="text-decoration: none;"><button style="width:100%; padding:0.58rem; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:1rem;">🔗 Open in New Tab</button></a>', unsafe_allow_html=True)
 
     st.divider()
 
@@ -1415,19 +1592,25 @@ elif st.session_state.step == 8:
             st.caption("This image has been generated and can be downloaded or used in your landing page.")
 
     # Preview tabs
-    tab1, tab2, tab3 = st.tabs(["👁️ Live Preview", "💻 HTML Code", "✏️ Edit HTML"])
+    if st.session_state.ab_testing:
+        tab1, tab2, tab3, tab4 = st.tabs(["👁️ Preview Version A", "👁️ Preview Version B", "💻 HTML Code", "✏️ Edit HTML"])
+    else:
+        tab1, tab2, tab3 = st.tabs(["👁️ Live Preview", "💻 HTML Code", "✏️ Edit HTML"])
 
     with tab1:
-        st.subheader("Preview Your Landing Page")
+        if st.session_state.ab_testing:
+            st.subheader("🅰️ Version A Preview - Benefits Focused")
+        else:
+            st.subheader("Preview Your Landing Page")
 
         # Preview mode toggle
         col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
         with col1:
-            if st.button("📱 Mobile", use_container_width=True, type="primary" if st.session_state.preview_mode == 'mobile' else "secondary"):
+            if st.button("📱 Mobile", use_container_width=True, type="primary" if st.session_state.preview_mode == 'mobile' else "secondary", key="mobile_preview_a"):
                 st.session_state.preview_mode = 'mobile'
                 st.rerun()
         with col2:
-            if st.button("💻 Desktop", use_container_width=True, type="primary" if st.session_state.preview_mode == 'desktop' else "secondary"):
+            if st.button("💻 Desktop", use_container_width=True, type="primary" if st.session_state.preview_mode == 'desktop' else "secondary", key="desktop_preview_a"):
                 st.session_state.preview_mode = 'desktop'
                 st.rerun()
         with col3:
@@ -1451,25 +1634,83 @@ elif st.session_state.step == 8:
             st.components.v1.html(st.session_state.html, height=1000, scrolling=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-    with tab2:
+    # Version B preview tab (only if A/B testing)
+    if st.session_state.ab_testing:
+        with tab2:
+            st.subheader("🅱️ Version B Preview - Pain Points & Urgency")
+
+            # Preview mode toggle for B
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+            with col1:
+                if st.button("📱 Mobile", use_container_width=True, type="primary" if st.session_state.preview_mode == 'mobile' else "secondary", key="mobile_preview_b"):
+                    st.session_state.preview_mode = 'mobile'
+                    st.rerun()
+            with col2:
+                if st.button("💻 Desktop", use_container_width=True, type="primary" if st.session_state.preview_mode == 'desktop' else "secondary", key="desktop_preview_b"):
+                    st.session_state.preview_mode = 'desktop'
+                    st.rerun()
+            with col3:
+                # Create data URI for opening in new tab
+                import base64
+                b64_html_b = base64.b64encode(st.session_state.variation_b.encode()).decode()
+                href_b = f'data:text/html;base64,{b64_html_b}'
+                st.markdown(f'<a href="{href_b}" target="_blank"><button style="width:100%; padding:0.5rem; background:#667eea; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">🔗 New Tab</button></a>', unsafe_allow_html=True)
+
+            st.divider()
+
+            # Render preview based on mode
+            if st.session_state.preview_mode == 'mobile':
+                st.markdown("**Mobile View (375px)**")
+                st.markdown('<div class="mobile-frame">', unsafe_allow_html=True)
+                st.components.v1.html(st.session_state.variation_b, height=800, scrolling=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            else:
+                st.markdown("**Desktop View (Full Width)**")
+                st.markdown('<div class="desktop-frame">', unsafe_allow_html=True)
+                st.components.v1.html(st.session_state.variation_b, height=1000, scrolling=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+
+    # HTML Code tab - use correct tab number based on A/B testing
+    html_code_tab = tab3 if st.session_state.ab_testing else tab2
+    with html_code_tab:
         st.subheader("HTML Source Code")
+        if st.session_state.ab_testing:
+            version_select = st.radio("Select Version:", ["Version A", "Version B"], horizontal=True)
+            html_to_show = st.session_state.variation_b if version_select == "Version B" else st.session_state.html
+        else:
+            html_to_show = st.session_state.html
+
         col1, col2 = st.columns([3, 1])
         with col2:
             if st.button("📋 Copy to Clipboard"):
                 st.info("Use the download button to save the HTML file")
-        st.code(st.session_state.html, language='html', line_numbers=True)
+        st.code(html_to_show, language='html', line_numbers=True)
 
-    with tab3:
+    # Edit HTML tab - use correct tab number based on A/B testing
+    edit_html_tab = tab4 if st.session_state.ab_testing else tab3
+    with edit_html_tab:
         st.subheader("Edit HTML (Advanced)")
         st.warning("⚠️ Advanced feature: Edit the HTML code directly before deploying")
+
+        if st.session_state.ab_testing:
+            version_edit = st.radio("Select Version to Edit:", ["Version A", "Version B"], horizontal=True, key="edit_version_select")
+            html_to_edit = st.session_state.variation_b if version_edit == "Version B" else st.session_state.html
+            edit_key = "html_editor_b" if version_edit == "Version B" else "html_editor_a"
+        else:
+            html_to_edit = st.session_state.html
+            edit_key = "html_editor"
+
         edited_html = st.text_area(
             "HTML Code",
-            value=st.session_state.html,
+            value=html_to_edit,
             height=400,
-            key="html_editor"
+            key=edit_key
         )
-        if st.button("💾 Update Preview", type="primary"):
-            st.session_state.html = edited_html
+        if st.button("💾 Update Preview", type="primary", key=f"update_{edit_key}"):
+            if st.session_state.ab_testing and version_edit == "Version B":
+                st.session_state.variation_b = edited_html
+            else:
+                st.session_state.html = edited_html
             st.success("✅ HTML updated! Switch to Preview tab to see changes.")
             st.rerun()
 
@@ -1542,9 +1783,12 @@ elif st.session_state.step == 8:
                         st.session_state.deployed_url = url
                         st.success(f"✅ Deployed successfully!")
                         st.markdown(f"**Your landing page is live at:** [{url}]({url})")
+                        # Track analytics
+                        track_analytics_event("deployed_to_netlify", {"url": url})
                         st.balloons()
                     else:
                         st.error("❌ Deployment failed. Please check your Netlify token and try again.")
+                        track_analytics_event("deployment_failed")
 
 # ============================================================================
 # FOOTER
