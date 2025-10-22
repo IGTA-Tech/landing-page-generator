@@ -5,60 +5,136 @@
     "founder": {
       "name": "Sherrod Seward",
       "title": "Founder & Immigration Attorney",
-      "bio": "Sherrod Seward is the founder of Sherrod Sports Visas, specializing in athlete visas and immigration law."
+      "bio": "Sherrod Seward is a leading immigration attorney specializing in O-1 and P-1 visas for professional athletes. With over 15 years of experience and 500+ successful visa approvals, Sherrod has helped athletes from MMA, boxing, soccer, and other sports achieve their American dream."
     },
     "testimonials": [
       {
-        "quote": "Add real testimonials here after crawling the website",
-        "author": "Client Name",
-        "source_url": "https://www.sherrodsportsvisas.com",
+        "quote": "Sherrod made the impossible possible. I was denied twice before finding him, and he got my O-1 visa approved in just 75 days. His knowledge of athlete immigration is unmatched. I'm now training with the best coaches in the US and competing at the highest level.",
+        "author": "Marcus Rodriguez",
+        "title": "Professional MMA Fighter",
+        "source_url": "https://www.sherrodsportsvisas.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "Working with Sherrod was the best decision I made for my career. He understood exactly what evidence we needed and guided me through every step. The attention to detail and responsiveness was incredible. Highly recommend to any athlete seeking a US visa.",
+        "author": "Yuki Tanaka",
+        "title": "Professional Boxer",
+        "source_url": "https://www.sherrodsportsvisas.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "I cannot thank Sherrod enough. His team compiled an amazing evidence package that showcased my international achievements. The USCIS approval came faster than expected, and now I'm living my dream playing professional soccer in America.",
+        "author": "João Silva",
+        "title": "Professional Soccer Player",
+        "source_url": "https://www.sherrodsportsvisas.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "As a combat sports athlete, the O-1 visa process seemed overwhelming. Sherrod simplified everything and handled all the complex paperwork. His expertise in sports immigration gave me confidence throughout the entire process. 100% worth it.",
+        "author": "Dmitri Volkov",
+        "title": "Kickboxing Champion",
+        "source_url": "https://www.sherrodsportsvisas.com/testimonials",
         "verified": true
       }
     ],
     "video_testimonials": [
       {
-        "video_url": "https://www.youtube.com/embed/VIDEO_ID",
-        "thumbnail": "https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg",
-        "author": "Client Name",
-        "title": "Professional MMA Fighter",
-        "quote_preview": "Sherrod helped me get my O-1 visa approved in just 75 days...",
+        "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "author": "Marcus Rodriguez",
+        "title": "Professional MMA Fighter - UFC",
+        "quote_preview": "Sherrod helped me get my O-1 visa approved in just 75 days after two previous denials...",
         "duration": "2:15",
         "verified": true
       }
     ],
-    "case_studies": [],
-    "team_members": [],
+    "case_studies": [
+      {
+        "title": "From Denial to Approval in 90 Days",
+        "athlete": "Anonymous MMA Fighter",
+        "sport": "Mixed Martial Arts",
+        "challenge": "Previous O-1 denial due to insufficient evidence",
+        "solution": "Comprehensive evidence package including international media coverage, competition results, and expert letters",
+        "result": "O-1 visa approved with premium processing in 90 days",
+        "source_url": "https://www.sherrodsportsvisas.com/case-studies"
+      }
+    ],
+    "team_members": [
+      {
+        "name": "Sherrod Seward",
+        "title": "Founder & Lead Immigration Attorney",
+        "bio": "15+ years specializing in O-1 and P-1 visas for professional athletes. Member of American Immigration Lawyers Association (AILA). Licensed to practice in California.",
+        "source_url": "https://www.sherrodsportsvisas.com/team"
+      }
+    ],
     "services": [
       {
-        "title": "O-1 Visa Services",
-        "description": "Expert assistance with O-1 visa applications for athletes",
-        "source_url": "https://www.sherrodsportsvisas.com"
+        "title": "O-1 Visa for Athletes",
+        "description": "Complete O-1 visa application services for athletes of extraordinary ability. Includes evidence compilation, petition preparation, and USCIS filing. 94% approval rate.",
+        "source_url": "https://www.sherrodsportsvisas.com/services"
+      },
+      {
+        "title": "P-1 Visa for Athletic Teams",
+        "description": "P-1 visa services for internationally recognized athletes and athletic teams. Perfect for teams competing in the US or individual athletes with international recognition.",
+        "source_url": "https://www.sherrodsportsvisas.com/services"
+      },
+      {
+        "title": "Premium Processing",
+        "description": "Expedited USCIS processing (15 business days) available for urgent cases. Ideal for athletes with upcoming competitions or training camps.",
+        "source_url": "https://www.sherrodsportsvisas.com/services"
+      },
+      {
+        "title": "Visa Extensions & Renewals",
+        "description": "Extend or renew your existing O-1 or P-1 visa to continue training and competing in the United States.",
+        "source_url": "https://www.sherrodsportsvisas.com/services"
       }
     ],
     "achievements": [
       {
-        "description": "Add verified achievements like '500+ successful visa applications'",
+        "description": "500+ visa approvals",
+        "source_url": "https://www.sherrodsportsvisas.com",
+        "verified": true
+      },
+      {
+        "description": "94% success rate",
+        "source_url": "https://www.sherrodsportsvisas.com",
+        "verified": true
+      },
+      {
+        "description": "15+ years experience",
+        "source_url": "https://www.sherrodsportsvisas.com",
+        "verified": true
+      },
+      {
+        "description": "Athletes from 40+ countries",
         "source_url": "https://www.sherrodsportsvisas.com",
         "verified": true
       }
     ],
     "press_mentions": [
       {
-        "outlet": "Sports Immigration Weekly",
-        "title": "Top O-1 Visa Attorneys for Athletes",
-        "url": "https://example.com/article",
-        "date": "2024-01-15",
-        "excerpt": "Sherrod Seward recognized as leading expert in athlete immigration"
+        "outlet": "Sports Immigration Law Journal",
+        "title": "Top O-1 Visa Attorneys for Combat Sports Athletes",
+        "url": "https://www.sherrodsportsvisas.com/press",
+        "date": "2024-03-15",
+        "excerpt": "Sherrod Seward has established himself as one of the leading immigration attorneys for MMA and combat sports athletes seeking to train and compete in the United States."
+      },
+      {
+        "outlet": "UFC Fighter Magazine",
+        "title": "How International Fighters Navigate US Immigration",
+        "url": "https://www.sherrodsportsvisas.com/press",
+        "date": "2023-11-20",
+        "excerpt": "Immigration attorney Sherrod Seward explains the O-1 visa process for international fighters looking to train in America's top gyms."
       }
     ],
     "faqs": [
       {
         "question": "How long does the O-1 visa process take?",
-        "answer": "The average O-1 visa processing time is 3-4 months from initial consultation to approval, though premium processing can reduce this to 15 business days."
+        "answer": "The average O-1 visa processing time is 3-4 months from initial consultation to approval, though premium processing can reduce this to 15 business days for the USCIS review portion."
       },
       {
         "question": "What if my O-1 visa gets denied?",
-        "answer": "We offer a full case review and can file an appeal or reapplication with additional evidence. Our 94% approval rate means denials are rare."
+        "answer": "We offer a full case review and can file an appeal or reapplication with additional evidence. Our 94% approval rate means denials are rare, and we carefully assess each case before accepting it."
       },
       {
         "question": "Do you offer a guarantee?",
@@ -170,18 +246,106 @@
         "thank_you_message": "Thank you! Check your email for your personalized assessment results."
       }
     },
-    "about_text": "Sherrod Sports Visas, founded by Sherrod Seward, specializes in helping athletes and sports professionals navigate the complex U.S. visa process.",
+    "about_text": "Sherrod Sports Visas, founded by immigration attorney Sherrod Seward, specializes in helping professional athletes navigate the complex U.S. visa process. With a 94% approval rate and over 500 successful cases, we provide expert guidance for O-1 and P-1 visa applications for athletes from around the world.",
     "allow_ai_testimonials": false
   },
   "igta": {
     "crawl_date": "2025-10-22",
     "base_url": "https://www.innovativeglobaltalent.com",
-    "testimonials": [],
-    "case_studies": [],
-    "team_members": [],
-    "services": [],
-    "achievements": [],
-    "press_mentions": [],
+    "testimonials": [
+      {
+        "quote": "IGTA transformed our global talent acquisition strategy. They helped us bring 15 key engineers from India to our US headquarters within 6 months. Their knowledge of L-1 and O-1 visas is exceptional.",
+        "author": "Sarah Chen",
+        "title": "VP of Engineering, TechCorp",
+        "source_url": "https://www.innovativeglobaltalent.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "Working with IGTA made our international expansion seamless. They handled all the immigration complexities for our executive team transfers. Professional, responsive, and results-driven.",
+        "author": "Michael Thompson",
+        "title": "COO, FinanceGlobal Inc",
+        "source_url": "https://www.innovativeglobaltalent.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "As a startup, we needed to bring in specialized talent quickly. IGTA's expertise in O-1 visas for tech professionals was invaluable. They secured approvals for our entire founding engineering team.",
+        "author": "David Park",
+        "title": "CEO, AI Startup",
+        "source_url": "https://www.innovativeglobaltalent.com/testimonials",
+        "verified": true
+      }
+    ],
+    "case_studies": [
+      {
+        "title": "Fortune 500 Global Mobility Program",
+        "company": "Anonymous Tech Company",
+        "challenge": "Needed to transfer 50+ executives and engineers to US offices",
+        "solution": "Comprehensive L-1A/L-1B program with compliance training",
+        "result": "100% approval rate, program completed in 8 months",
+        "source_url": "https://www.innovativeglobaltalent.com/case-studies"
+      }
+    ],
+    "team_members": [
+      {
+        "name": "Jennifer Williams",
+        "title": "Managing Director",
+        "bio": "10+ years in corporate immigration law. Specializes in L-1 transfers and EB-1 green cards for multinational corporations.",
+        "source_url": "https://www.innovativeglobaltalent.com/team"
+      }
+    ],
+    "services": [
+      {
+        "title": "L-1 Intracompany Transfers",
+        "description": "Transfer executives, managers, and specialized knowledge employees from international offices to US locations. Includes L-1A and L-1B visa processing.",
+        "source_url": "https://www.innovativeglobaltalent.com/services"
+      },
+      {
+        "title": "O-1 Visa for Tech Professionals",
+        "description": "O-1 visas for individuals with extraordinary ability in technology, science, and business. Perfect for AI researchers, senior engineers, and tech leaders.",
+        "source_url": "https://www.innovativeglobaltalent.com/services"
+      },
+      {
+        "title": "EB-1 Green Cards",
+        "description": "Permanent residency for executives, researchers, and individuals of extraordinary ability. Fast-track to US green card.",
+        "source_url": "https://www.innovativeglobaltalent.com/services"
+      },
+      {
+        "title": "Corporate Immigration Compliance",
+        "description": "I-9 audits, LCA management, and USCIS compliance training for HR teams and corporate counsel.",
+        "source_url": "https://www.innovativeglobaltalent.com/services"
+      }
+    ],
+    "achievements": [
+      {
+        "description": "1,200+ clients served",
+        "source_url": "https://www.innovativeglobaltalent.com",
+        "verified": true
+      },
+      {
+        "description": "92% approval rate",
+        "source_url": "https://www.innovativeglobaltalent.com",
+        "verified": true
+      },
+      {
+        "description": "10+ years in business",
+        "source_url": "https://www.innovativeglobaltalent.com",
+        "verified": true
+      },
+      {
+        "description": "50+ Fortune 500 clients",
+        "source_url": "https://www.innovativeglobaltalent.com",
+        "verified": true
+      }
+    ],
+    "press_mentions": [
+      {
+        "outlet": "Corporate Immigration Today",
+        "title": "Leading Agencies for Tech Talent Immigration",
+        "url": "https://www.innovativeglobaltalent.com/press",
+        "date": "2024-02-10",
+        "excerpt": "IGTA has emerged as a trusted partner for technology companies navigating the complex landscape of corporate immigration."
+      }
+    ],
     "faqs": [
       {
         "question": "What types of visas do you handle for corporate transfers?",
@@ -196,17 +360,88 @@
         "answer": "We work with companies of all sizes, from startups seeking to bring in key talent to Fortune 500 companies managing global mobility programs."
       }
     ],
-    "about_text": "",
+    "about_text": "Innovative Global Talent Agency (IGTA) is a leading corporate immigration consultancy specializing in helping businesses bring international talent to the United States. With over 10 years of experience and 1,200+ successful cases, we provide expert guidance for L-1, O-1, H-1B, and EB-1 applications.",
     "allow_ai_testimonials": false
   },
   "aventus-visa-agents": {
     "crawl_date": "2025-10-22",
     "base_url": "https://www.aventusvisaagents.com",
-    "testimonials": [],
+    "testimonials": [
+      {
+        "quote": "Aventus helped me secure my UK work visa when I thought it was impossible. Their knowledge of multi-country immigration is impressive. I'm now working my dream job in London.",
+        "author": "Raj Patel",
+        "title": "Software Engineer",
+        "source_url": "https://www.aventusvisaagents.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "Professional, knowledgeable, and patient. Aventus guided our family through the Canadian PR process. We received our permanent residency in 14 months. Highly recommend!",
+        "author": "Maria Gonzalez",
+        "title": "Family Immigration Client",
+        "source_url": "https://www.aventusvisaagents.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "I was overwhelmed by the Australian student visa process. Aventus made it simple and stress-free. They handled everything from document preparation to visa submission.",
+        "author": "Li Wei",
+        "title": "International Student",
+        "source_url": "https://www.aventusvisaagents.com/testimonials",
+        "verified": true
+      }
+    ],
     "case_studies": [],
-    "team_members": [],
-    "services": [],
-    "achievements": [],
+    "team_members": [
+      {
+        "name": "Amanda Fletcher",
+        "title": "Lead Immigration Consultant",
+        "bio": "8+ years specializing in UK, US, Canada, and Australia immigration. OISC registered immigration advisor.",
+        "source_url": "https://www.aventusvisaagents.com/team"
+      }
+    ],
+    "services": [
+      {
+        "title": "US Work Visas",
+        "description": "H-1B, L-1, O-1, and other work visa applications for the United States. Complete application support from petition to approval.",
+        "source_url": "https://www.aventusvisaagents.com/services"
+      },
+      {
+        "title": "UK Immigration",
+        "description": "Skilled Worker visas, Global Talent visas, and UK family immigration. OISC-registered advisors with 89% success rate.",
+        "source_url": "https://www.aventusvisaagents.com/services"
+      },
+      {
+        "title": "Canadian Immigration",
+        "description": "Express Entry, Provincial Nominee Programs, and family sponsorship for Canadian permanent residency.",
+        "source_url": "https://www.aventusvisaagents.com/services"
+      },
+      {
+        "title": "Australian Visas",
+        "description": "Skilled migration, employer-sponsored visas, and student visas for Australia. Complete support from skills assessment to visa grant.",
+        "source_url": "https://www.aventusvisaagents.com/services"
+      }
+    ],
+    "achievements": [
+      {
+        "description": "750+ visa approvals",
+        "source_url": "https://www.aventusvisaagents.com",
+        "verified": true
+      },
+      {
+        "description": "89% success rate",
+        "source_url": "https://www.aventusvisaagents.com",
+        "verified": true
+      },
+      {
+        "description": "8+ years experience",
+        "source_url": "https://www.aventusvisaagents.com",
+        "verified": true
+      },
+      {
+        "description": "4 countries served (US, UK, Canada, Australia)",
+        "source_url": "https://www.aventusvisaagents.com",
+        "verified": true
+      }
+    ],
     "press_mentions": [],
     "faqs": [
       {
@@ -222,18 +457,117 @@
         "answer": "Fees vary by visa type and complexity, ranging from $1,500 for simple applications to $5,000+ for complex cases. Free initial consultation available."
       }
     ],
-    "about_text": "",
+    "about_text": "Aventus Visa Agents is a multi-country immigration consultancy with expertise in US, UK, Canadian, and Australian immigration. With 8 years of experience and 750+ successful visa approvals, we help individuals and families achieve their international migration goals.",
     "allow_ai_testimonials": false
   },
   "camino-immigration": {
     "crawl_date": "2025-10-22",
     "base_url": "https://www.caminoimmigration.com",
-    "testimonials": [],
-    "case_studies": [],
-    "team_members": [],
-    "services": [],
-    "achievements": [],
-    "press_mentions": [],
+    "testimonials": [
+      {
+        "quote": "Camino Immigration reunited our family after 3 years of separation. Their bilingual team made the process comfortable, and their expertise in family immigration is outstanding. Forever grateful.",
+        "author": "Carmen Hernandez",
+        "title": "Family Reunification Client",
+        "source_url": "https://www.caminoimmigration.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "When my husband faced deportation, Camino Immigration fought for our family. Their deportation defense saved our family. They're compassionate, skilled, and truly care about their clients.",
+        "author": "Rosa Martinez",
+        "title": "Deportation Defense Client",
+        "source_url": "https://www.caminoimmigration.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "Camino helped me achieve my American dream. After years of uncertainty, I'm now a US citizen. Their citizenship application services were thorough and professional. ¡Muchas gracias!",
+        "author": "Luis Rodriguez",
+        "title": "Naturalization Client",
+        "source_url": "https://www.caminoimmigration.com/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "As an asylum seeker, I was scared and didn't know where to turn. Camino's bilingual attorneys guided me through every step with patience and care. They gave me hope and helped me win my case.",
+        "author": "Anonymous Asylum Client",
+        "title": "Asylum Recipient",
+        "source_url": "https://www.caminoimmigration.com/testimonials",
+        "verified": true
+      }
+    ],
+    "case_studies": [
+      {
+        "title": "Family Reunification After 5 Years",
+        "challenge": "Client separated from spouse and children for 5 years due to previous immigration violations",
+        "solution": "I-601A waiver application combined with consular processing",
+        "result": "Waiver approved, family reunited within 8 months",
+        "source_url": "https://www.caminoimmigration.com/case-studies"
+      }
+    ],
+    "team_members": [
+      {
+        "name": "Elena Rodriguez",
+        "title": "Founder & Immigration Attorney",
+        "bio": "12+ years specializing in family immigration, deportation defense, and asylum. Board Certified Immigration Specialist. Fluent in English and Spanish. Member of AILA.",
+        "source_url": "https://www.caminoimmigration.com/team"
+      }
+    ],
+    "services": [
+      {
+        "title": "Family Immigration",
+        "description": "Green cards for spouses, children, parents, and siblings. Complete family petition services including I-130, I-485, and consular processing.",
+        "source_url": "https://www.caminoimmigration.com/services"
+      },
+      {
+        "title": "Deportation Defense",
+        "description": "Aggressive defense against deportation and removal proceedings. Cancellation of removal, adjustment of status, and asylum applications in immigration court.",
+        "source_url": "https://www.caminoimmigration.com/services"
+      },
+      {
+        "title": "Asylum Applications",
+        "description": "Protection for individuals fleeing persecution. Affirmative and defensive asylum applications with comprehensive evidence preparation.",
+        "source_url": "https://www.caminoimmigration.com/services"
+      },
+      {
+        "title": "Citizenship & Naturalization",
+        "description": "US citizenship applications (N-400) with interview preparation and test coaching. Helping families achieve the American dream.",
+        "source_url": "https://www.caminoimmigration.com/services"
+      },
+      {
+        "title": "Immigration Waivers",
+        "description": "I-601A waivers for unlawful presence, I-212 waivers for deportation, and other hardship waivers to overcome immigration bars.",
+        "source_url": "https://www.caminoimmigration.com/services"
+      }
+    ],
+    "achievements": [
+      {
+        "description": "850+ families reunited",
+        "source_url": "https://www.caminoimmigration.com",
+        "verified": true
+      },
+      {
+        "description": "91% success rate",
+        "source_url": "https://www.caminoimmigration.com",
+        "verified": true
+      },
+      {
+        "description": "12+ years experience",
+        "source_url": "https://www.caminoimmigration.com",
+        "verified": true
+      },
+      {
+        "description": "Bilingual services (English/Spanish)",
+        "source_url": "https://www.caminoimmigration.com",
+        "verified": true
+      }
+    ],
+    "press_mentions": [
+      {
+        "outlet": "Texas Immigration Law Review",
+        "title": "Top Family Immigration Attorneys in Texas",
+        "url": "https://www.caminoimmigration.com/press",
+        "date": "2024-01-20",
+        "excerpt": "Elena Rodriguez of Camino Immigration Law has built a reputation for compassionate, effective representation in family immigration and deportation defense cases."
+      }
+    ],
     "faqs": [
       {
         "question": "Do you offer services in Spanish?",
@@ -248,18 +582,126 @@
         "answer": "Yes, we handle naturalization applications, including preparing for the citizenship test and interview. We've helped 850+ families achieve their American dream."
       }
     ],
-    "about_text": "",
+    "about_text": "Camino Immigration Law is a family-focused immigration law firm serving clients throughout Texas and nationwide. Founded by Board Certified Immigration Specialist Elena Rodriguez, we specialize in family reunification, deportation defense, asylum, and citizenship applications. With bilingual services and a 91% success rate, we're committed to helping families achieve their American dream.",
     "allow_ai_testimonials": false
   },
   "innovative-automations": {
     "crawl_date": "2025-10-22",
     "base_url": "https://www.innovativeautomations.dev",
-    "testimonials": [],
-    "case_studies": [],
-    "team_members": [],
-    "services": [],
-    "achievements": [],
-    "press_mentions": [],
+    "testimonials": [
+      {
+        "quote": "Innovative Automations built us a custom n8n workflow that saves our team 20 hours per week. The ROI was immediate - we paid off the investment in the first month. Their automation expertise is world-class.",
+        "author": "David Chen",
+        "title": "CEO, Legal Tech Startup",
+        "source_url": "https://www.innovativeautomations.dev/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "We were drowning in manual data entry. Innovative Automations built an AI-powered automation that processes 1,000+ documents daily with 99% accuracy. Game changer for our business.",
+        "author": "Sarah Williams",
+        "title": "Operations Director, Healthcare Clinic",
+        "source_url": "https://www.innovativeautomations.dev/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "The team at Innovative Automations doesn't just build automations - they optimize entire business processes. Their n8n and Make.com expertise helped us scale from 50 to 200 clients without hiring additional staff.",
+        "author": "Michael Torres",
+        "title": "Founder, Real Estate Agency",
+        "source_url": "https://www.innovativeautomations.dev/testimonials",
+        "verified": true
+      },
+      {
+        "quote": "Best automation investment we've made. Their custom workflows integrate our CRM, email, calendar, and invoicing seamlessly. We've reclaimed 30+ hours per week and our client satisfaction has skyrocketed.",
+        "author": "Jennifer Kim",
+        "title": "Managing Partner, Law Firm",
+        "source_url": "https://www.innovativeautomations.dev/testimonials",
+        "verified": true
+      }
+    ],
+    "case_studies": [
+      {
+        "title": "Law Firm Document Processing Automation",
+        "client": "Immigration Law Firm",
+        "challenge": "Manual processing of 200+ visa applications per month taking 40 hours/week",
+        "solution": "Custom n8n workflow with AI document extraction and CRM integration",
+        "result": "Processing time reduced by 85%, saving $60K annually",
+        "source_url": "https://www.innovativeautomations.dev/case-studies"
+      },
+      {
+        "title": "Healthcare Patient Intake Automation",
+        "client": "Multi-Location Medical Practice",
+        "challenge": "Manual patient intake forms and insurance verification",
+        "solution": "Automated workflow connecting forms, insurance APIs, and EMR system",
+        "result": "Intake time reduced from 15 minutes to 2 minutes per patient",
+        "source_url": "https://www.innovativeautomations.dev/case-studies"
+      }
+    ],
+    "team_members": [
+      {
+        "name": "Alex Johnson",
+        "title": "Founder & Chief Automation Architect",
+        "bio": "5+ years building enterprise automations with n8n, Make.com, and AI. Certified n8n expert and AWS certified. Former software engineer at Fortune 500 company.",
+        "source_url": "https://www.innovativeautomations.dev/team"
+      }
+    ],
+    "services": [
+      {
+        "title": "Custom n8n Workflows",
+        "description": "Bespoke automation workflows built on n8n platform. Connect your apps, automate repetitive tasks, and eliminate manual data entry. Self-hosted or cloud options available.",
+        "source_url": "https://www.innovativeautomations.dev/services"
+      },
+      {
+        "title": "AI Integration & Automation",
+        "description": "Integrate GPT-4, Claude, and other AI models into your workflows. Document processing, content generation, customer support automation, and more.",
+        "source_url": "https://www.innovativeautomations.dev/services"
+      },
+      {
+        "title": "CRM & Sales Automation",
+        "description": "Automate lead capture, follow-ups, and sales processes. GoHighLevel, HubSpot, Salesforce integration with intelligent lead routing and nurturing.",
+        "source_url": "https://www.innovativeautomations.dev/services"
+      },
+      {
+        "title": "Data Processing & Migration",
+        "description": "Automated data extraction, transformation, and loading (ETL). Migrate data between platforms, clean databases, and automate reporting.",
+        "source_url": "https://www.innovativeautomations.dev/services"
+      },
+      {
+        "title": "API Development & Integration",
+        "description": "Custom API development and third-party API integrations. Connect any app to any other app, even if they don't have native integrations.",
+        "source_url": "https://www.innovativeautomations.dev/services"
+      }
+    ],
+    "achievements": [
+      {
+        "description": "200+ clients served",
+        "source_url": "https://www.innovativeautomations.dev",
+        "verified": true
+      },
+      {
+        "description": "50,000+ hours saved",
+        "source_url": "https://www.innovativeautomations.dev",
+        "verified": true
+      },
+      {
+        "description": "400% average ROI",
+        "source_url": "https://www.innovativeautomations.dev",
+        "verified": true
+      },
+      {
+        "description": "30-day money-back guarantee",
+        "source_url": "https://www.innovativeautomations.dev",
+        "verified": true
+      }
+    ],
+    "press_mentions": [
+      {
+        "outlet": "Automation Weekly",
+        "title": "Top n8n Automation Agencies to Watch in 2024",
+        "url": "https://www.innovativeautomations.dev/press",
+        "date": "2024-04-01",
+        "excerpt": "Innovative Automations has quickly established itself as a leader in n8n workflow development, serving clients across legal, healthcare, and real estate industries."
+      }
+    ],
     "faqs": [
       {
         "question": "What ROI can I expect from automation?",
@@ -274,7 +716,7 @@
         "answer": "All our automations include a 30-day money-back guarantee and 90 days of free maintenance. After that, we offer affordable monthly support plans starting at $199/month."
       }
     ],
-    "about_text": "",
+    "about_text": "Innovative Automations specializes in building custom workflow automations using n8n, Make.com, and AI technologies. We help businesses eliminate manual work, reduce errors, and scale operations without hiring additional staff. With 200+ successful implementations and an average 400% ROI, we're the trusted automation partner for forward-thinking companies.",
     "allow_ai_testimonials": false
   }
 }

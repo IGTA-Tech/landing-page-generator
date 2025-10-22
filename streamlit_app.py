@@ -523,7 +523,7 @@ CALENDAR INTEGRATION (Instant Booking):
             email_data = json.dumps(brand['email_automation'], indent=2)
             email_automation_info = f"""
 
-EMAIL AUTOMATION (Zapier/Webhook Integration):
+EMAIL AUTOMATION (n8n Webhook Integration):
 {email_data}
 
 - Add hidden form fields for webhook submission
@@ -542,7 +542,7 @@ EMAIL AUTOMATION (Zapier/Webhook Integration):
             crm_data = json.dumps(brand['crm_integration'], indent=2)
             crm_integration_info = f"""
 
-CRM INTEGRATION ({brand['crm_integration'].get('provider', 'HubSpot').upper()}):
+CRM INTEGRATION ({brand['crm_integration'].get('provider', 'GoHighLevel').upper()}):
 {crm_data}
 
 - Sync leads to CRM automatically

@@ -42,16 +42,16 @@
     },
     "email_automation": {
       "enabled": true,
-      "provider": "zapier",
-      "webhook_url": "https://hooks.zapier.com/hooks/catch/YOUR_WEBHOOK_ID/",
+      "provider": "n8n",
+      "webhook_url": "",
       "quiz_results_email": true,
       "form_submission_email": true,
       "lead_notification_email": "sherrod@sherrodsportsvisas.com"
     },
     "crm_integration": {
       "enabled": true,
-      "provider": "hubspot",
-      "webhook_url": "https://api.hubspot.com/crm/v3/objects/contacts",
+      "provider": "gohighlevel",
+      "webhook_url": "",
       "api_key_required": true,
       "sync_quiz_results": true,
       "sync_form_submissions": true
@@ -59,7 +59,7 @@
     "heatmap_tracking": {
       "enabled": true,
       "provider": "microsoft_clarity",
-      "project_id": "YOUR_CLARITY_PROJECT_ID",
+      "project_id": "",
       "track_clicks": true,
       "track_scrolls": true,
       "track_sessions": true
@@ -219,7 +219,7 @@
       "hours_saved": 50000,
       "roi_average": "400%",
       "specializations": ["Workflow Automation", "AI Integration", "Data Processing", "API Development"],
-      "certifications": ["Zapier Certified Expert", "Make.com Partner", "AWS Certified"],
+      "certifications": ["n8n Certified Expert", "Make.com Partner", "AWS Certified"],
       "industries_served": ["Legal", "Healthcare", "Real Estate", "E-commerce"]
     },
     "trust_badges": [
