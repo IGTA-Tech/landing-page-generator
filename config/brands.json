@@ -32,6 +32,38 @@
       "availability_text": "Attorney available Mon-Fri 9am-5pm PST",
       "offline_message": "Leave a message - we'll respond within 2 hours"
     },
+    "calendar_integration": {
+      "enabled": true,
+      "provider": "calendly",
+      "url": "https://calendly.com/sherrod-seward/consultation",
+      "button_text": "Schedule Free Consultation",
+      "modal_title": "Book Your Free 15-Minute Consultation",
+      "inline_embed": true
+    },
+    "email_automation": {
+      "enabled": true,
+      "provider": "zapier",
+      "webhook_url": "https://hooks.zapier.com/hooks/catch/YOUR_WEBHOOK_ID/",
+      "quiz_results_email": true,
+      "form_submission_email": true,
+      "lead_notification_email": "sherrod@sherrodsportsvisas.com"
+    },
+    "crm_integration": {
+      "enabled": true,
+      "provider": "hubspot",
+      "webhook_url": "https://api.hubspot.com/crm/v3/objects/contacts",
+      "api_key_required": true,
+      "sync_quiz_results": true,
+      "sync_form_submissions": true
+    },
+    "heatmap_tracking": {
+      "enabled": true,
+      "provider": "microsoft_clarity",
+      "project_id": "YOUR_CLARITY_PROJECT_ID",
+      "track_clicks": true,
+      "track_scrolls": true,
+      "track_sessions": true
+    },
     "lead_form": {
       "type": "multi-step",
       "steps": [

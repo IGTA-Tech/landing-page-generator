@@ -495,6 +495,130 @@ MULTI-STEP LEAD FORM (Higher Completion Rates):
 - Multi-step forms have 30-50% higher completion rates than single-page forms
 """
 
+        # Add calendar integration
+        calendar_integration_info = ""
+        if brand.get('calendar_integration', {}).get('enabled'):
+            cal_data = json.dumps(brand['calendar_integration'], indent=2)
+            calendar_integration_info = f"""
+
+CALENDAR INTEGRATION (Instant Booking):
+{cal_data}
+
+- Embed Calendly/Cal.com booking widget
+- Inline embed OR modal popup button
+- Button text: "{brand['calendar_integration'].get('button_text', 'Schedule Consultation')}"
+- Modal title: "{brand['calendar_integration'].get('modal_title', 'Book Your Consultation')}"
+- URL: {brand['calendar_integration'].get('url')}
+- Use brand colors for calendar button
+- Make it prominent - calendar booking converts at 15-30%
+- Place calendar CTA after quiz results or in hero section
+"""
+
+        # Add email automation
+        email_automation_info = ""
+        if brand.get('email_automation', {}).get('enabled'):
+            email_data = json.dumps(brand['email_automation'], indent=2)
+            email_automation_info = f"""
+
+EMAIL AUTOMATION (Zapier/Webhook Integration):
+{email_data}
+
+- Add hidden form fields for webhook submission
+- On quiz completion: POST results to webhook URL
+- On form submission: POST data to webhook URL
+- Include JavaScript to handle webhook POST requests
+- Fields to send: name, email, phone, quiz_score, quiz_result
+- Webhook URL: {brand['email_automation'].get('webhook_url')}
+- Auto-send quiz results email via webhook
+- Notify {brand['email_automation'].get('lead_notification_email', 'admin@example.com')} of new leads
+"""
+
+        # Add CRM integration
+        crm_integration_info = ""
+        if brand.get('crm_integration', {}).get('enabled'):
+            crm_data = json.dumps(brand['crm_integration'], indent=2)
+            crm_integration_info = f"""
+
+CRM INTEGRATION ({brand['crm_integration'].get('provider', 'HubSpot').upper()}):
+{crm_data}
+
+- Sync leads to CRM automatically
+- POST quiz results to: {brand['crm_integration'].get('webhook_url')}
+- Send fields: email, name, phone, company, quiz_score, result_tier
+- Include JavaScript for CRM API calls
+- Add hidden form for CRM submission
+- Track lead source as "Landing Page - [Brand Name]"
+"""
+
+        # Add heatmap tracking
+        heatmap_tracking_info = ""
+        if brand.get('heatmap_tracking', {}).get('enabled'):
+            heatmap_data = json.dumps(brand['heatmap_tracking'], indent=2)
+            provider = brand['heatmap_tracking'].get('provider', 'microsoft_clarity')
+            project_id = brand['heatmap_tracking'].get('project_id', 'YOUR_PROJECT_ID')
+
+            if provider == 'microsoft_clarity':
+                heatmap_tracking_info = f"""
+
+HEATMAP TRACKING (Microsoft Clarity):
+{heatmap_data}
+
+- Add Microsoft Clarity tracking code to <head>
+- Project ID: {project_id}
+- Tracking code:
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){{
+        c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    }})(window, document, "clarity", "script", "{project_id}");
+</script>
+- Tracks: clicks, scrolls, sessions, heatmaps, session recordings
+"""
+            elif provider == 'hotjar':
+                heatmap_tracking_info = f"""
+
+HEATMAP TRACKING (Hotjar):
+{heatmap_data}
+
+- Add Hotjar tracking code to <head>
+- Site ID: {project_id}
+- Tracking code:
+<script>
+    (function(h,o,t,j,a,r){{
+        h.hj=h.hj||function(){{(h.hj.q=h.hj.q||[]).push(arguments)}};
+        h._hjSettings={{hjid:{project_id},hjsv:6}};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    }})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+- Tracks: clicks, scrolls, heatmaps, session recordings, feedback polls
+"""
+
+        # Add dynamic pricing
+        dynamic_pricing_info = ""
+        if brand_content.get('pricing'):
+            pricing_data = json.dumps(brand_content['pricing'], indent=2)
+            dynamic_pricing_info = f"""
+
+DYNAMIC PRICING DISPLAY:
+{pricing_data}
+
+- Show pricing tiers after quiz completion
+- Display recommended tier based on quiz score:
+  * "strong" → Recommend Premium Package
+  * "moderate" → Recommend Standard Package
+  * "weak" → Recommend Consultation Only
+- Highlight "popular" tier with badge
+- Show discount badge: "{brand_content['pricing'].get('discount_badge', '')}"
+- Include feature lists for each tier
+- Add CTA buttons with tier-specific text
+- Use pricing cards with brand colors
+- Make it look professional and trustworthy
+"""
+
         # Use custom colors if available, otherwise use brand defaults
         colors = st.session_state.custom_colors if st.session_state.custom_colors else brand['colors']
 
@@ -510,6 +634,11 @@ MULTI-STEP LEAD FORM (Higher Completion Rates):
 {video_testimonials_info}
 {live_chat_info}
 {multi_step_form_info}
+{calendar_integration_info}
+{email_automation_info}
+{crm_integration_info}
+{heatmap_tracking_info}
+{dynamic_pricing_info}
 
 BRAND INFORMATION:
 - Brand Name: {brand['name']}

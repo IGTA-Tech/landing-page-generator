@@ -65,6 +65,59 @@
         "answer": "While no attorney can guarantee USCIS approval, we offer a full refund if we determine we cannot build a strong case for you during the initial evidence gathering phase."
       }
     ],
+    "pricing": {
+      "display_type": "dynamic",
+      "tiers": [
+        {
+          "name": "Standard O-1 Package",
+          "price": "$5,500",
+          "billing": "one-time",
+          "description": "Complete O-1 visa application with standard processing",
+          "features": [
+            "Complete petition preparation",
+            "Evidence package compilation",
+            "USCIS filing and tracking",
+            "Email support throughout process"
+          ],
+          "recommended_for": "moderate",
+          "cta_text": "Get Started",
+          "popular": false
+        },
+        {
+          "name": "Premium O-1 Package",
+          "price": "$7,500",
+          "billing": "one-time",
+          "description": "Expedited O-1 visa with premium processing",
+          "features": [
+            "Everything in Standard",
+            "Premium USCIS processing (15 days)",
+            "Priority attorney review",
+            "Phone support throughout",
+            "Success guarantee - refund if not approved"
+          ],
+          "recommended_for": "strong",
+          "cta_text": "Choose Premium",
+          "popular": true
+        },
+        {
+          "name": "Consultation Only",
+          "price": "$500",
+          "billing": "one-time",
+          "description": "Strategy session to assess your case",
+          "features": [
+            "60-minute consultation",
+            "Case assessment",
+            "Evidence recommendations",
+            "Timeline planning"
+          ],
+          "recommended_for": "weak",
+          "cta_text": "Book Consultation",
+          "popular": false
+        }
+      ],
+      "show_after_quiz": true,
+      "discount_badge": "Limited Time: 10% off Premium Package"
+    },
     "eligibility_quiz": {
       "enabled": true,
       "title": "Check Your O-1 Visa Eligibility",
