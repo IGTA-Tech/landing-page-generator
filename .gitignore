@@ -23,6 +23,7 @@ parts/
 sdist/
 var/
 wheels/
+temp_auto_push.bat
 *.egg-info/
 .installed.cfg
 *.egg
@@ -31,7 +32,6 @@ wheels/
 .streamlit/secrets.toml
 
 # IDEs
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -49,3 +49,5 @@ htmlcov/
 # Generated files
 generated_pages/
 *.html
+.gitignore
+temp_interactive_push.bat
