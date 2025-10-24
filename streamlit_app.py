@@ -251,7 +251,7 @@ Format as clear, structured text that I can review and approve before HTML gener
         st.error(f"Error generating copy preview: {str(e)}")
         return None
 
-def generate_landing_page(brand, philosophy, style, cta, intent, copy_preview=None, feedback=None, hero_image_url=None, brand_id=None):
+def generate_landing_page(brand, philosophy, style, cta, intent, copy_preview=None, feedback=None, hero_image_url=None, brand_id=None, integrations=None):
     """Generate landing page HTML using Claude API"""
     try:
         api_key = get_secret('ANTHROPIC_API_KEY')
@@ -498,76 +498,66 @@ MULTI-STEP LEAD FORM (Higher Completion Rates):
 - Multi-step forms have 30-50% higher completion rates than single-page forms
 """
 
-        # Add calendar integration
+        # Add calendar integration (from session_state integrations)
         calendar_integration_info = ""
-        if brand.get('calendar_integration', {}).get('enabled'):
-            cal_data = json.dumps(brand['calendar_integration'], indent=2)
+        if integrations and integrations.get('calendly_url'):
             calendar_integration_info = f"""
 
 CALENDAR INTEGRATION (Instant Booking):
-{cal_data}
+- Calendly URL: {integrations.get('calendly_url')}
 
-- Embed Calendly/Cal.com booking widget
+- Embed Calendly booking widget
 - Inline embed OR modal popup button
-- Button text: "{brand['calendar_integration'].get('button_text', 'Schedule Consultation')}"
-- Modal title: "{brand['calendar_integration'].get('modal_title', 'Book Your Consultation')}"
-- URL: {brand['calendar_integration'].get('url')}
+- Button text: "Schedule Free Consultation"
+- Modal title: "Book Your Free Consultation"
 - Use brand colors for calendar button
 - Make it prominent - calendar booking converts at 15-30%
 - Place calendar CTA after quiz results or in hero section
 """
 
-        # Add email automation
+        # Add email automation (from session_state integrations)
         email_automation_info = ""
-        if brand.get('email_automation', {}).get('enabled'):
-            email_data = json.dumps(brand['email_automation'], indent=2)
+        if integrations and integrations.get('n8n_webhook'):
             email_automation_info = f"""
 
 EMAIL AUTOMATION (n8n Webhook Integration):
-{email_data}
+- Webhook URL: {integrations.get('n8n_webhook')}
 
 - Add hidden form fields for webhook submission
 - On quiz completion: POST results to webhook URL
 - On form submission: POST data to webhook URL
 - Include JavaScript to handle webhook POST requests
 - Fields to send: name, email, phone, quiz_score, quiz_result
-- Webhook URL: {brand['email_automation'].get('webhook_url')}
 - Auto-send quiz results email via webhook
-- Notify {brand['email_automation'].get('lead_notification_email', 'admin@example.com')} of new leads
+- Notify admin of new leads via n8n workflow
 """
 
-        # Add CRM integration
+        # Add CRM integration (from session_state integrations)
         crm_integration_info = ""
-        if brand.get('crm_integration', {}).get('enabled'):
-            crm_data = json.dumps(brand['crm_integration'], indent=2)
+        if integrations and integrations.get('ghl_webhook'):
             crm_integration_info = f"""
 
-CRM INTEGRATION ({brand['crm_integration'].get('provider', 'GoHighLevel').upper()}):
-{crm_data}
+CRM INTEGRATION (GOHIGHLEVEL):
+- Webhook URL: {integrations.get('ghl_webhook')}
 
-- Sync leads to CRM automatically
-- POST quiz results to: {brand['crm_integration'].get('webhook_url')}
+- Sync leads to GoHighLevel CRM automatically
+- POST quiz results to webhook URL above
 - Send fields: email, name, phone, company, quiz_score, result_tier
 - Include JavaScript for CRM API calls
 - Add hidden form for CRM submission
 - Track lead source as "Landing Page - [Brand Name]"
 """
 
-        # Add heatmap tracking
+        # Add heatmap tracking (from session_state integrations)
         heatmap_tracking_info = ""
-        if brand.get('heatmap_tracking', {}).get('enabled'):
-            heatmap_data = json.dumps(brand['heatmap_tracking'], indent=2)
-            provider = brand['heatmap_tracking'].get('provider', 'microsoft_clarity')
-            project_id = brand['heatmap_tracking'].get('project_id', 'YOUR_PROJECT_ID')
-
-            if provider == 'microsoft_clarity':
-                heatmap_tracking_info = f"""
+        if integrations and integrations.get('clarity_project_id'):
+            project_id = integrations.get('clarity_project_id')
+            heatmap_tracking_info = f"""
 
 HEATMAP TRACKING (Microsoft Clarity):
-{heatmap_data}
+- Project ID: {project_id}
 
 - Add Microsoft Clarity tracking code to <head>
-- Project ID: {project_id}
 - Tracking code:
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){{
@@ -577,27 +567,6 @@ HEATMAP TRACKING (Microsoft Clarity):
     }})(window, document, "clarity", "script", "{project_id}");
 </script>
 - Tracks: clicks, scrolls, sessions, heatmaps, session recordings
-"""
-            elif provider == 'hotjar':
-                heatmap_tracking_info = f"""
-
-HEATMAP TRACKING (Hotjar):
-{heatmap_data}
-
-- Add Hotjar tracking code to <head>
-- Site ID: {project_id}
-- Tracking code:
-<script>
-    (function(h,o,t,j,a,r){{
-        h.hj=h.hj||function(){{(h.hj.q=h.hj.q||[]).push(arguments)}};
-        h._hjSettings={{hjid:{project_id},hjsv:6}};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    }})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
-- Tracks: clicks, scrolls, heatmaps, session recordings, feedback polls
 """
 
         # Add dynamic pricing
@@ -1046,13 +1015,13 @@ st.markdown("""
 st.markdown("### 📍 Your Progress")
 
 # Progress percentage
-progress_pct = ((st.session_state.step - 1) / 8) * 100
+progress_pct = ((st.session_state.step - 1) / 10) * 100
 st.progress(progress_pct / 100)
-st.caption(f"Step {st.session_state.step} of 8 ({int(progress_pct)}% complete)")
+st.caption(f"Step {st.session_state.step} of 10 ({int(progress_pct)}% complete)")
 
 # Step indicators
-cols = st.columns(8)
-steps = ["Intent", "Brand", "Philosophy", "Style", "CTAs", "Media", "Copy Review", "Generate"]
+cols = st.columns(10)
+steps = ["Intent", "Brand", "Philosophy", "Style", "CTAs", "Media", "Analytics", "Integrations", "Copy Review", "Generate"]
 for i, (col, step_name) in enumerate(zip(cols, steps)):
     with col:
         if i + 1 < st.session_state.step:
@@ -1637,9 +1606,151 @@ elif st.session_state.step == 6:
             st.rerun()
 
 # ============================================================================
-# STEP 7: COPY PREVIEW & APPROVAL
+# STEP 7: ANALYTICS & TRACKING
 # ============================================================================
 elif st.session_state.step == 7:
+    st.markdown('<div class="main-header">📊 Analytics & Tracking</div>', unsafe_allow_html=True)
+    st.caption("Configure analytics to track your landing page performance")
+
+    st.info("💡 Track page views, quiz completions, and form submissions to Airtable for funnel analysis")
+
+    st.markdown("### Airtable Configuration (Optional)")
+
+    airtable_base_id = st.text_input(
+        "Airtable Base ID",
+        placeholder="appXXXXXXXXXXXXXX",
+        help="Found in your Airtable base URL. Example: https://airtable.com/appABC123/...",
+        value=st.session_state.get('airtable_base_id', '')
+    )
+
+    airtable_table_name = st.text_input(
+        "Airtable Table Name",
+        placeholder="Landing Page Analytics",
+        help="The name of the table where analytics will be stored",
+        value=st.session_state.get('airtable_table_name', '')
+    )
+
+    if airtable_base_id or airtable_table_name:
+        st.success("✅ Analytics tracking will be enabled")
+        with st.expander("📋 Required Airtable Table Fields"):
+            st.markdown("""
+            Create a table with these fields:
+            - `event_id` (Single line text, Primary)
+            - `event_type` (Single select: page_view, quiz_started, quiz_completed, form_submitted)
+            - `campaign` (Single line text)
+            - `brand` (Single line text)
+            - `timestamp` (Date with time)
+            - `user_data` (Long text - JSON)
+            - `metadata` (Long text - JSON)
+            """)
+    else:
+        st.warning("⚠️ Analytics tracking will be disabled (fields left blank)")
+
+    st.divider()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("← Back to Media"):
+            st.session_state.step = 6
+            st.rerun()
+
+    with col2:
+        if st.button("Continue →", type="primary", use_container_width=True):
+            st.session_state.airtable_base_id = airtable_base_id
+            st.session_state.airtable_table_name = airtable_table_name
+            st.session_state.step = 8
+            st.rerun()
+
+# ============================================================================
+# STEP 8: INTEGRATION CONFIGURATION
+# ============================================================================
+elif st.session_state.step == 8:
+    st.markdown('<div class="main-header">🔗 Integration Configuration</div>', unsafe_allow_html=True)
+    st.caption("Connect n8n, GoHighLevel, Microsoft Clarity, and Calendly (all optional)")
+
+    st.info("💡 All integrations are optional. Leave fields blank to skip.")
+
+    # n8n Email Automation
+    st.markdown("### 📧 n8n Email Automation")
+    n8n_webhook = st.text_input(
+        "n8n Webhook URL",
+        placeholder="https://your-n8n-instance.app.n8n.cloud/webhook/abc123",
+        help="Sends quiz results and form submissions to n8n for email automation",
+        value=st.session_state.get('n8n_webhook', '')
+    )
+    if n8n_webhook:
+        st.success("✅ n8n automation will be enabled")
+
+    st.divider()
+
+    # GoHighLevel CRM
+    st.markdown("### 🎯 GoHighLevel CRM Sync")
+    ghl_webhook = st.text_input(
+        "GoHighLevel Webhook URL",
+        placeholder="https://your-ghl-webhook-url.com/webhook",
+        help="Automatically syncs leads to GoHighLevel CRM",
+        value=st.session_state.get('ghl_webhook', '')
+    )
+    if ghl_webhook:
+        st.success("✅ GoHighLevel sync will be enabled")
+
+    st.divider()
+
+    # Microsoft Clarity
+    st.markdown("### 📊 Microsoft Clarity Heatmaps")
+    clarity_project_id = st.text_input(
+        "Microsoft Clarity Project ID",
+        placeholder="abc123xyz",
+        help="Get from https://clarity.microsoft.com - just the Project ID, not the full script",
+        value=st.session_state.get('clarity_project_id', '')
+    )
+    if clarity_project_id:
+        st.success("✅ Heatmap tracking will be enabled")
+
+    st.divider()
+
+    # Calendly
+    st.markdown("### 📅 Calendly Booking Integration")
+    calendly_url = st.text_input(
+        "Calendly Booking URL",
+        placeholder="https://calendly.com/yourname/consultation",
+        help="Your Calendly scheduling link - will be embedded in the landing page",
+        value=st.session_state.get('calendly_url', '')
+    )
+    if calendly_url:
+        st.success("✅ Calendar booking will be enabled")
+
+    st.divider()
+
+    # Summary
+    enabled_count = sum([bool(n8n_webhook), bool(ghl_webhook), bool(clarity_project_id), bool(calendly_url)])
+    if enabled_count > 0:
+        st.success(f"✅ {enabled_count} integration(s) will be active")
+    else:
+        st.info("ℹ️ No integrations configured - landing page will work without them")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("← Back to Analytics"):
+            st.session_state.step = 7
+            st.rerun()
+
+    with col2:
+        if st.button("Continue →", type="primary", use_container_width=True):
+            # Store all integration values
+            st.session_state.integrations = {
+                'n8n_webhook': n8n_webhook,
+                'ghl_webhook': ghl_webhook,
+                'clarity_project_id': clarity_project_id,
+                'calendly_url': calendly_url
+            }
+            st.session_state.step = 9
+            st.rerun()
+
+# ============================================================================
+# STEP 9: COPY PREVIEW & APPROVAL
+# ============================================================================
+elif st.session_state.step == 9:
     st.markdown('<div class="main-header">📝 Review Your Copy & Content</div>', unsafe_allow_html=True)
     st.caption("Review the headlines, text, and structure before generating HTML")
 
@@ -1733,13 +1844,13 @@ elif st.session_state.step == 7:
         with col3:
             if st.button("Continue to HTML →", type="primary", use_container_width=True):
                 st.session_state.copy_approved = True
-                st.session_state.step = 8
+                st.session_state.step = 10
                 st.rerun()
 
 # ============================================================================
-# STEP 8: GENERATE HTML & PREVIEW
+# STEP 10: GENERATE HTML & PREVIEW
 # ============================================================================
-elif st.session_state.step == 8:
+elif st.session_state.step == 10:
     st.markdown('<div class="main-header">Generate Your Landing Page</div>', unsafe_allow_html=True)
 
     # Generate if not already generated
@@ -1786,7 +1897,8 @@ elif st.session_state.step == 8:
             copy_preview=st.session_state.get('copy_preview'),
             feedback=st.session_state.get('copy_feedback'),
             hero_image_url=st.session_state.get('generated_image'),
-            brand_id=st.session_state.brand
+            brand_id=st.session_state.brand,
+            integrations=st.session_state.get('integrations', {})
         )
         st.session_state.html = html
 
@@ -1807,7 +1919,8 @@ elif st.session_state.step == 8:
                 copy_preview=st.session_state.get('copy_preview'),
                 feedback=variation_b_feedback,
                 hero_image_url=st.session_state.get('generated_image'),
-                brand_id=st.session_state.brand
+                brand_id=st.session_state.brand,
+                integrations=st.session_state.get('integrations', {})
             )
             st.session_state.variation_b = variation_b_html
 
